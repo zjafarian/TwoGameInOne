@@ -4,4 +4,6 @@
     <string name="text_4_in_a_row">4 in a Row</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="selectable_cell">you can not select this cell</string>
+
 </resources>

@@ -3,7 +3,7 @@ package com.example.twogameinone.model;
 import java.io.Serializable;
 
 public class Setting implements Serializable {
-    private int mLength = 0;
+    private int mLength = 3;
     private String mGameName = "";
     private ColorBackground mColorBackground = ColorBackground.White;
 

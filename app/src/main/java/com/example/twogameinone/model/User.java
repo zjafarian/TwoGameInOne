@@ -4,82 +4,145 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class User implements Serializable {
-    private String mUserName;
-    private int mUserId;
     private String mSexUser;
-    private String mColorUser;
-    private int mScoreUser;
     private char mSymbolUser;
     private char[][] mSituation;
     private int length;
+    private String mStringGameName;
 
-    public User(int length, int mUserId) {
+
+    public User(String sexUser, char symbolUser, char[][] situation, int length, String stringGameName) {
+        mSexUser = sexUser;
+        mSymbolUser = symbolUser;
+        mSituation = situation;
         this.length = length;
-        this.mUserId = mUserId;
-        mSituation = new char[length][length];
+        mStringGameName = stringGameName;
     }
 
-    public String getmUserName() {
-        return mUserName;
+    public String getStringGameName() {
+        return mStringGameName;
     }
 
-    public void setmUserName(String mUserName) {
-        this.mUserName = mUserName;
+    public void setStringGameName(String stringGameName) {
+        mStringGameName = stringGameName;
     }
 
-    public int getmUserId() {
-        return mUserId;
-    }
-
-    public String getmSexUser() {
+    public String getSexUser() {
         return mSexUser;
     }
 
-    public void setmSexUser(String mSexUser) {
-        this.mSexUser = mSexUser;
+    public void setSexUser(String sexUser) {
+        mSexUser = sexUser;
     }
 
-    public String getmColorUser() {
-        return mColorUser;
-    }
-
-    public void setmColorUser(String mColorUser) {
-        this.mColorUser = mColorUser;
-    }
-
-    public int getmScoreUser() {
-        return mScoreUser;
-    }
-
-    public void setmScoreUser(int mScoreUser) {
-        this.mScoreUser = mScoreUser;
-    }
-
-    public char getmSymbolUser() {
+    public char getSymbolUser() {
         return mSymbolUser;
     }
 
-    public void setmSymbolUser(char mSymbolUser) {
-        this.mSymbolUser = mSymbolUser;
+    public void setSymbolUser(char symbolUser) {
+        mSymbolUser = symbolUser;
     }
 
-    public char[][] getmSituation() {
+    public char[][] getSituation() {
         return mSituation;
     }
 
-    public void setmSituation(char[][] mSituation) {
-        this.mSituation = mSituation;
+    public void setSituation(char[][] situation) {
+        mSituation = situation;
     }
 
-    public char[][] selectCell(char[][] mSituation, int row, int column, int mUserId) {
-        this.mSituation = mSituation;
-        if (mUserId == 0) {
-            this.mSituation[row][column]='*';
-        } else if (mUserId==1){
-            this.mSituation[row][column]='o';
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    public boolean reviewWinner(char[][] situation) {
+        this.mSituation = situation;
+        if (checkRow())
+            return true;
+        else if (checkColumn())
+            return true;
+        else if (checkDiagonalOne())
+            return true;
+        else if (checkDiagonalTwo())
+            return true;
+
+
+        return false;
+    }
+
+    private boolean checkRow() {
+        boolean check = false;
+        int j = 0;
+        for (int i = 0; i < mSituation.length; i++) {
+            while (j < mSituation.length - 1) {
+                if (mSituation[i][0] != ' ') {
+                    if (mSituation[i][0] == mSituation[i][++j]) {
+                        check = true;
+                    } else check = false;
+                }
+            }
+            if (check) {
+                return check;
+            }
+            j = 0;
         }
-        return mSituation;
+        return false;
     }
 
+    private boolean checkColumn() {
+        boolean check = false;
+        int j = 0;
+        for (int i = 0; i < mSituation.length; i++) {
+            while (j < mSituation.length - 1) {
+                if (mSituation[0][i]!=' ') {
+                    if (mSituation[0][i] == mSituation[++j][i]) {
+                        check = true;
+                    } else check = false;
+                }
+            }
+            if (check) {
+                return check;
+            }
+            j = 0;
+        }
+        return false;
+    }
+
+    private boolean checkDiagonalOne() {
+        boolean check = false;
+        int j = 0;
+        while (j < mSituation.length - 1) {
+            if (mSituation[0][0]!=' ') {
+                if (mSituation[0][0] == mSituation[++j][j]) {
+                    check = true;
+                } else check = false;
+            }
+        }
+        if (check) {
+            return check;
+        }
+        return false;
+    }
+
+    private boolean checkDiagonalTwo() {
+        boolean check = false;
+        int j = mSituation.length - 1;
+        int i = 0;
+        while (j >= 0) {
+            if (mSituation[0][j]!=' ') {
+                if (mSituation[0][j] == mSituation[++i][--j]) {
+                    check = true;
+                } else check = false;
+            }
+        }
+        if (check) {
+            return check;
+        }
+        return false;
+    }
 
 }
