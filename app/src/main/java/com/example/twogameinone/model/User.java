@@ -71,11 +71,12 @@ public class User implements Serializable {
         this.mSituation = mSituation;
     }
 
-    public char[][] selectCell(int row, int column, int mUserId) {
+    public char[][] selectCell(char[][] mSituation, int row, int column, int mUserId) {
+        this.mSituation = mSituation;
         if (mUserId == 0) {
-            mSituation[row][column]='*';
+            this.mSituation[row][column]='*';
         } else if (mUserId==1){
-            mSituation[row][column]='o';
+            this.mSituation[row][column]='o';
         }
         return mSituation;
     }
