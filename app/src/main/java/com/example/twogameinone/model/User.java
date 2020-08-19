@@ -59,31 +59,32 @@ public class User implements Serializable {
         this.length = length;
     }
 
-    public boolean reviewWinner(char[][] situation) {
+    public boolean reviewWinner(char[][] situation, char symbolUserTwo, int row, int column) {
         this.mSituation = situation;
-        if (checkRow())
+
+        if (checkRow(symbolUserTwo))
             return true;
-        else if (checkColumn())
+        else if (checkColumn(symbolUserTwo))
             return true;
-        else if (checkDiagonalOne())
+        else if (checkDiagonalOne(symbolUserTwo))
             return true;
-        else if (checkDiagonalTwo())
+        else if (checkDiagonalTwo(symbolUserTwo))
             return true;
 
 
         return false;
     }
 
-    private boolean checkRow() {
+    private boolean checkRow(char symbolUserTwo) {
         boolean check = false;
         int j = 0;
         for (int i = 0; i < mSituation.length; i++) {
             while (j < mSituation.length - 1) {
-                if (mSituation[i][0] != ' ') {
+                if (mSituation[i][0] == mSymbolUser || mSituation[i][0] == symbolUserTwo) {
                     if (mSituation[i][0] == mSituation[i][++j]) {
                         check = true;
                     } else check = false;
-                }
+                } else break;
             }
             if (check) {
                 return check;
@@ -93,16 +94,17 @@ public class User implements Serializable {
         return false;
     }
 
-    private boolean checkColumn() {
+    private boolean checkColumn(char symbolUserTwo) {
         boolean check = false;
         int j = 0;
         for (int i = 0; i < mSituation.length; i++) {
             while (j < mSituation.length - 1) {
-                if (mSituation[0][i]!=' ') {
+                if (mSituation[0][i] == mSymbolUser || mSituation[0][i] == symbolUserTwo) {
                     if (mSituation[0][i] == mSituation[++j][i]) {
                         check = true;
                     } else check = false;
-                }
+                } else break;
+
             }
             if (check) {
                 return check;
@@ -112,15 +114,15 @@ public class User implements Serializable {
         return false;
     }
 
-    private boolean checkDiagonalOne() {
+    private boolean checkDiagonalOne(char symbolUserTwo) {
         boolean check = false;
-        int j = 0;
-        while (j < mSituation.length - 1) {
-            if (mSituation[0][0]!=' ') {
-                if (mSituation[0][0] == mSituation[++j][j]) {
+        int i = 0;
+        while (i < mSituation.length - 1) {
+            if (mSituation[0][0] == mSymbolUser || mSituation[0][0] == symbolUserTwo) {
+                if (mSituation[0][0] == mSituation[++i][i]) {
                     check = true;
                 } else check = false;
-            }
+            } else break;
         }
         if (check) {
             return check;
@@ -128,16 +130,17 @@ public class User implements Serializable {
         return false;
     }
 
-    private boolean checkDiagonalTwo() {
+    private boolean checkDiagonalTwo(char symbolUserTwo) {
         boolean check = false;
         int j = mSituation.length - 1;
         int i = 0;
         while (j >= 0) {
-            if (mSituation[0][j]!=' ') {
+            if (mSituation[0][j] == mSymbolUser || mSituation[0][j] == symbolUserTwo) {
                 if (mSituation[0][j] == mSituation[++i][--j]) {
                     check = true;
                 } else check = false;
-            }
+            }else break;
+
         }
         if (check) {
             return check;

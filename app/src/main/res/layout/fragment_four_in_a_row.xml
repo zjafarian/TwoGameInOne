@@ -1,11 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.FourInARowFragment">
+    tools:context=".controller.FourInARowFragment"
+    android:id="@+id/layout_main">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="left"
+            android:layout_marginRight="70dp"
+            android:src="@drawable/ic_girl" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="70dp"
+            android:src="@drawable/ic_boy" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <ImageButton
+            android:id="@+id/image_btn_user_girl_active"
+            style="@android:style/Widget.DeviceDefault.ImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="57dp"
+            android:background="@android:drawable/list_selector_background"
+            android:src="@android:drawable/presence_online"
+            android:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/image_btn_user_boy_deactive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="200dp"
+            android:background="@android:drawable/menuitem_background"
+            android:src="@android:drawable/presence_invisible"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/image_btn_user_girl_deactive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="59dp"
+            android:background="@android:drawable/menuitem_background"
+            android:src="@android:drawable/presence_invisible"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/image_btn_user_boy_active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="200dp"
+            android:background="@android:drawable/list_selector_background"
+            android:src="@android:drawable/presence_online"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+
+
+
+    <ImageButton
+        android:id="@+id/image_btn_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="10dp"
+        android:background="@android:drawable/list_selector_background"
+        android:src="@drawable/ic_setting" />
 
 
 </FrameLayout>
