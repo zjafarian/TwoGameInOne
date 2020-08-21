@@ -14,7 +14,10 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=" Select the first player" />
+            android:layout_marginLeft="2dp"
+            android:text="@string/select_the_first_player"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -22,7 +25,7 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/radioButton"
+                android:id="@+id/btn_user_girl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -30,7 +33,7 @@
                 android:text="Girl" />
 
             <RadioButton
-                android:id="@+id/radioButton2"
+                android:id="@+id/btn_user_boy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -41,7 +44,10 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Background Color" />
+            android:layout_marginLeft="2dp"
+            android:text="@string/select_background_color"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -49,37 +55,40 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/radioButton3"
+                android:id="@+id/btn_color_red"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Red" />
+                android:text="@string/red" />
 
             <RadioButton
-                android:id="@+id/radioButton4"
+                android:id="@+id/btn_color_blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Blue" />
+                android:text="@string/blue" />
 
             <RadioButton
-                android:id="@+id/radioButton5"
+                android:id="@+id/btn_color_green"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Green" />
+                android:text="@string/green" />
 
             <RadioButton
-                android:id="@+id/radioButton6"
+                android:id="@+id/btn_color_white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="White" />
+                android:checked="true"
+                android:text="@string/white" />
         </RadioGroup>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView
@@ -88,14 +97,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:text="Select Number Row" />
+                android:text="@string/select_number_row"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Select Number Column" />
+                android:text="@string/select_number_column"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -116,38 +129,43 @@
                     android:id="@+id/btn-radio_5_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="5" />
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="@string/btn_5" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_6_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="6" />
+                    android:text="@string/btn_6" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_7_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="7" />
+                    android:layout_weight="1"
+                    android:text="@string/btn_7" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_8_row"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="8" />
+                    android:text="@string/btn_8" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_9_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="9" />
+                    android:layout_weight="1"
+                    android:text="@string/btn_9" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_10_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="10" />
+                    android:layout_weight="1"
+                    android:text="@string/btn_10" />
             </RadioGroup>
 
             <RadioGroup
@@ -161,39 +179,62 @@
                     android:id="@+id/btn-radio_5_column"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="5" />
+                    android:checked="true"
+                    android:text="@string/btn_5" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_6_column"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="6" />
+                    android:layout_weight="1"
+                    android:text="@string/btn_6" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_7_column"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="7" />
+                    android:layout_weight="1"
+                    android:text="@string/btn_7" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_8_column"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="8" />
+                    android:layout_weight="1"
+                    android:text="@string/btn_8" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_9_column"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="9" />
+                    android:layout_weight="1"
+                    android:text="@string/btn_9" />
 
                 <RadioButton
                     android:id="@+id/btn-radio_10_column"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="10" />
+                    android:text="@string/btn_10" />
             </RadioGroup>
+
         </LinearLayout>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="5dp"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/btn_discard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="5dp"
+        android:text="Discard" />
+
 </FrameLayout>

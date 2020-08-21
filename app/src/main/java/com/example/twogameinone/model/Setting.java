@@ -9,6 +9,8 @@ public class Setting implements Serializable {
     private ColorBackground mColorBackground = ColorBackground.White;
     private static String sStringNameGameTicTacToe ="TicTacToe";
     private static String sStringNameGameFourInRow = "ForInRow";
+    private String sexUser;
+
 
     public Setting(String mGameName) {
         this.mGameName = mGameName;
@@ -16,6 +18,14 @@ public class Setting implements Serializable {
             mRow =3;
             mColumn=3;
         }
+    }
+
+    public String getSexUser() {
+        return sexUser;
+    }
+
+    public void setSexUser(String sexUser) {
+        this.sexUser = sexUser;
     }
 
     public int getRow() {
