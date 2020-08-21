@@ -5,8 +5,10 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,11 +27,12 @@ import java.util.ArrayList;
 
 
 public class FourInARowFragment extends Fragment {
-    private int mIntLength;
+    private int mIntRow;
+    private int mIntColumn;
     private User mUserGirl;
     private User mUserBoy;
     private Setting mSetting;
-    private Button[] mButtons;
+    private Button[][] mButtons;
     private LinearLayout mLayoutButtons;
     private ImageButton mImageButtonSetting;
     private ImageButton mImageButtonActiveUserGirl;
@@ -39,7 +42,12 @@ public class FourInARowFragment extends Fragment {
     private int[][] mIdButtons;
     private char[][] mCharsSituation;
     private View mLayoutMain;
-    private static int sIndexButton;
+    private int mRow = 0;
+    private int mColumn = 0;
+    private int widthAndHeight = 800;
+    public static String sGameNameFourInRow = "FourInRow";
+    private int scoreBoy = 0;
+    private int scoreGirl = 0;
 
 
     public FourInARowFragment() {
@@ -49,11 +57,17 @@ public class FourInARowFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSetting = new Setting(7, "forinrow");
-        mCharsSituation = new char[][]{{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
-        mIntLength = mSetting.getmLength();
-        mUserGirl = new User("girl", 'r', mCharsSituation, 3, "TicTacToe");
-        mUserBoy = new User("boy", 'b', mCharsSituation, 3, "TicTocToe");
+        mSetting = new Setting("ForInRow");
+        mIntRow = mSetting.getRow();
+        mIntColumn = mSetting.getColumn();
+        mCharsSituation = new char[mIntRow][mIntColumn];
+        for (int i = 0; i < mIntRow; i++) {
+            for (int j = 0; j < mIntColumn; j++) {
+                mCharsSituation[i][j] = ' ';
+            }
+        }
+        mUserGirl = new User("girl", 'r', mCharsSituation, mIntRow, mIntColumn, "TicTacToe");
+        mUserBoy = new User("boy", 'b', mCharsSituation, mIntRow, mIntColumn, "TicTocToe");
 
     }
 
@@ -62,10 +76,10 @@ public class FourInARowFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_four_in_a_row, container, false);
-        mButtons = new Button[mIntLength * mIntLength];
-        mIdButtons = new int[mIntLength][mIntLength];
+        mButtons = new Button[mIntRow][mIntColumn];
+        mIdButtons = new int[mIntRow][mIntColumn];
         setViewId(view);
-        createButtons(view, mIntLength);
+        createButtons(view, mIntRow, mIntColumn);
         setListener();
         return view;
     }
@@ -80,105 +94,133 @@ public class FourInARowFragment extends Fragment {
         mLayoutMain = view.findViewById(R.id.layout_main);
     }
 
-    private void createButtons(View view, int intLength) {
+    private void createButtons(@NonNull View view, int intRow, int intColumn) {
         int id = 100;
-        int widthAndHeight = 800;
-        int index = 0;
-
-        widthAndHeight = widthAndHeight / mIntLength;
-        for (int i = 0; i < intLength; i++) {
+        int indexRow = 0;
+        int indexColumn = 0;
+        widthAndHeight = widthAndHeight / mIntRow;
+        for (int i = 0; i < mIntRow; i++) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 0);
-            LinearLayout mLinearLayout = new LinearLayout(getContext());
-            mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-            mLinearLayout.setLayoutParams(params);
-            for (int j = 0; j < intLength; j++) {
+            LinearLayout mLinearLayouts = new LinearLayout(getContext());
+            mLinearLayouts.setOrientation(LinearLayout.HORIZONTAL);
+            mLinearLayouts.setLayoutParams(params);
+            for (int j = 0; j < mIntColumn; j++) {
                 mIdButtons[i][j] = id + j;
-                mButtons[index] = new Button(getContext());
-                String strId = String.valueOf(i) + String.valueOf(j);
-                mButtons[index].setText(strId);
+                mButtons[i][j] = new Button(getContext());
                 LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(widthAndHeight, widthAndHeight);
-                params1.setMargins(0, 0, 0, 0);
-                mButtons[index].setLayoutParams(params1);
-                mButtons[index].setGravity(Gravity.CENTER);
-                mButtons[index].setPadding(0, 0, 0, 0);
-                mButtons[index].setId(Integer.valueOf(mIdButtons[i][j]));
-                mLinearLayout.addView(mButtons[index]);
-                index++;
+                mButtons[i][j].setLayoutParams(params1);
+                mButtons[i][j].setGravity(Gravity.CENTER);
+                mButtons[i][j].setId(Integer.valueOf(mIdButtons[i][j]));
+                mLinearLayouts.addView(mButtons[i][j]);
+                if (i < mIntRow - 1)
+                    mButtons[i][j].setEnabled(false);
             }
-            mLayoutButtons.addView(mLinearLayout);
+            mLayoutButtons.addView(mLinearLayouts);
             id += 100;
         }
-    }
 
-    private void startGame(String userSex, int row, int column) {
-        if (userSex.equals("girl")) {
-            mCharsSituation[row][column] = 'r';
-            mImageButtonActiveUserGirl.setVisibility(View.GONE);
-            mImageButtonDeactivateGirl.setVisibility(View.VISIBLE);
-            mImageButtonActiveUserBoy.setVisibility(View.VISIBLE);
-            mImageButtonDeactivateBoy.setVisibility(View.GONE);
-        } else if (userSex.equals("boy")) {
-            mCharsSituation[row][column] = 'b';
-            mImageButtonActiveUserBoy.setVisibility(View.GONE);
-            mImageButtonDeactivateBoy.setVisibility(View.VISIBLE);
-            mImageButtonActiveUserGirl.setVisibility(View.VISIBLE);
-            mImageButtonDeactivateGirl.setVisibility(View.GONE);
-        }
-
-
-    }
-
-    private void setToast() {
-        Toast toast = Toast.makeText(getContext(), R.string.selectable_cell, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.BOTTOM, 0, 0);
-        toast.show();
     }
 
     private void outWinner(String mUserSex) {
+        if (mUserSex.equals(mUserGirl.getSexUser())) {
+            scoreGirl++;
+            mUserGirl.setScore(scoreGirl);
+        } else {
+            scoreBoy++;
+            mUserBoy.setScore(scoreBoy);
+        }
         String message = mUserSex + "won";
-        for (int i = 0; i < mButtons.length; i++) {
-            mButtons[i].setEnabled(false);
-
+        for (int i = 0; i < mIntRow; i++) {
+            for (int j = 0; j < mIntColumn; j++) {
+                mButtons[i][j].setEnabled(false);
+            }
         }
         Snackbar snackbar = Snackbar.make(mLayoutMain, message, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 
     private void setListener() {
-
-        for (int i = 0; i < mButtons.length; i++) {
-            sIndexButton = i;
-            if (mButtons[i].isClickable()) {
-                mButtons[i].setOnClickListener(new View.OnClickListener() {
+        for (int i = mIntRow - 1; i > 0; i--) {
+            final int finalI = i;
+            for (int j = 0; j < mIntColumn; j++) {
+                final int finalJ = j;
+                mButtons[i][j].setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
+
                         if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                            if (mCharsSituation[0][0] == ' ') {
-                                mButtons[sIndexButton].setBackgroundColor(Color.RED);
-                                startGame(mUserGirl.getSexUser(), 0, 0);
-                                if (mUserGirl.reviewWinner(mCharsSituation, mUserBoy.getSymbolUser(), 0, 0)) {
-                                    outWinner("girl");
-                                }
-                            } else {
-                                setToast();
-                            }
+                            onTogglePlayer(true,finalI,finalJ);
+                            mButtons[finalI][finalJ].setPadding(20, 8, 0, 0);
+                            Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_red);
+                            mButtons[finalI][finalJ].setCompoundDrawablesWithIntrinsicBounds(icon,
+                                    null, null, null);
+                            mButtons[finalI][finalJ].setEnabled(false);
+                            findWinner(finalI, finalJ, true);
                         } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                            if (mCharsSituation[0][0] == ' ') {
-                                mButtons[sIndexButton].setBackgroundColor(Color.BLUE);
-                                startGame(mUserBoy.getSexUser(), 0, 0);
-                                if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 0, 0)) {
-                                    outWinner("boy");
-                                }
-                            } else {
-                                setToast();
-                            }
+                            onTogglePlayer(false,finalI,finalJ);
+                            mButtons[finalI][finalJ].setPadding(20, 8, 0, 0);
+                            Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_blue);
+                            mButtons[finalI][finalJ].setCompoundDrawablesWithIntrinsicBounds(icon,
+                                    null, null, null);
+                            mButtons[finalI][finalJ].setEnabled(false);
+                            findWinner(finalI, finalJ, false);
                         }
+
                     }
                 });
             }
         }
+    }
+
+    private void findWinner(int indexI, int indexJ, boolean isGirl) {
+        mButtons[indexI - 1][indexJ].setEnabled(true);
+        if (isGirl) {
+            if (mUserGirl.reviewWinner(sGameNameFourInRow, mCharsSituation, mUserGirl.getSymbolUser())) {
+                outWinner("Girl");
+                for (int i = 0; i < mIntRow; i++) {
+                    for (int j = 0; j < mIntColumn; j++) {
+                        mCharsSituation[i][j] = ' ';
+                    }
+                }
+                mUserGirl.setSituation(mCharsSituation);
+                mUserBoy.setSituation(mCharsSituation);
+            }
+
+        } else {
+            if (mUserBoy.reviewWinner(sGameNameFourInRow, mCharsSituation, mUserBoy.getSymbolUser())) {
+                outWinner("Boy");
+                for (int i = 0; i < mIntRow; i++) {
+                    for (int j = 0; j < mIntColumn; j++) {
+                        mCharsSituation[i][j] = ' ';
+                    }
+                }
+                mUserGirl.setSituation(mCharsSituation);
+                mUserBoy.setSituation(mCharsSituation);
+            }
+        }
+    }
+
+    private void onTogglePlayer(boolean isGirl,int indexI, int indexJ) {
+        if (isGirl) {
+            mCharsSituation[indexI][indexJ] = 'r';
+            mUserGirl.setSituation(mCharsSituation);
+            mImageButtonActiveUserGirl.setVisibility(View.GONE);
+            mImageButtonDeactivateGirl.setVisibility(View.VISIBLE);
+            mImageButtonActiveUserBoy.setVisibility(View.VISIBLE);
+            mImageButtonDeactivateBoy.setVisibility(View.GONE);
+        } else {
+            mCharsSituation[indexI][indexJ] = 'b';
+            mUserBoy.setSituation(mCharsSituation);
+            mImageButtonActiveUserBoy.setVisibility(View.GONE);
+            mImageButtonDeactivateBoy.setVisibility(View.VISIBLE);
+            mImageButtonActiveUserGirl.setVisibility(View.VISIBLE);
+            mImageButtonDeactivateGirl.setVisibility(View.GONE);
+        }
+        /*if (mColumn >= 2) {
+            mColumn = 0;
+            mRow++;
+        } else mColumn++;*/
     }
 
 }

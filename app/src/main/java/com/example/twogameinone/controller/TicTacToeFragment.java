@@ -38,9 +38,14 @@ public class TicTacToeFragment extends Fragment {
     private Button mButtonThreeThree;
     private User mUserGirl;
     private User mUserBoy;
+    private int mRow;
+    private int mColumn;
     private Setting mSettingTicTocTOe;
     private char[][] mCharsSituation;
     private View mLayoutMain;
+    public static String sGameNameTicTacToe="TicTacToe";
+    private int scoreGirl=0;
+    private int scoreBoy=0;
 
     public TicTacToeFragment() {
         // Required empty public constructor
@@ -50,11 +55,17 @@ public class TicTacToeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCharsSituation = new char[][]{{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
-        mUserGirl = new User("girl", '*', mCharsSituation, 3, "TicTacToe");
-        mUserBoy = new User("boy", 'o', mCharsSituation, 3, "TicTocToe");
-
-
+        mSettingTicTocTOe = new Setting("TicTacToe");
+        mRow = mSettingTicTocTOe.getRow();
+        mColumn = mSettingTicTocTOe.getColumn();
+        mCharsSituation = new char[mRow][mColumn];
+        for (int i = 0; i <mRow ; i++) {
+            for (int j = 0; j <mColumn ; j++) {
+                mCharsSituation[i][j]=' ';
+            }
+        }
+        mUserGirl = new User("girl", '*', mCharsSituation, mRow, mColumn, "TicTacToe");
+        mUserBoy = new User("boy", 'o', mCharsSituation, mRow, mColumn, "TicTocToe");
     }
 
     @Override
@@ -77,7 +88,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                         mButtonOneOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserGirl.getSexUser(), 0, 0);
-                        if (mUserGirl.reviewWinner(mCharsSituation, mUserBoy.getSymbolUser(), 0, 0)) {
+                        mUserGirl.setSituation(mCharsSituation);
+                        if (mUserGirl.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserGirl.getSymbolUser())) {
                             outWinner("girl");
                         }
                     } else {
@@ -89,7 +101,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                         mButtonOneOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserBoy.getSexUser(), 0, 0);
-                        if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 0, 0)) {
+                        mUserBoy.setSituation(mCharsSituation);
+                        if (mUserBoy.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("boy");
                         }
                     } else {
@@ -108,7 +121,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                         mButtonOneTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserGirl.getSexUser(), 0, 1);
-                        if (mUserGirl.reviewWinner(mCharsSituation, mUserBoy.getSymbolUser(), 0, 1)) {
+                        mUserGirl.setSituation(mCharsSituation);
+                        if (mUserGirl.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserGirl.getSymbolUser())) {
                             outWinner("girl");
                         }
                     } else {
@@ -120,7 +134,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                         mButtonOneTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserBoy.getSexUser(), 0, 1);
-                        if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 0, 1)) {
+                        mUserBoy.setSituation(mCharsSituation);
+                        if (mUserBoy.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("boy");
                         }
                     } else {
@@ -140,7 +155,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                         mButtonOneThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserGirl.getSexUser(), 0, 2);
-                        if (mUserGirl.reviewWinner(mCharsSituation, mUserBoy.getSymbolUser(), 0, 2)) {
+                        mUserGirl.setSituation(mCharsSituation);
+                        if (mUserGirl.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserGirl.getSymbolUser())) {
                             outWinner("girl");
                         }
                     } else {
@@ -152,7 +168,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                         mButtonOneThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserBoy.getSexUser(), 0, 2);
-                        if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 0, 2)) {
+                        mUserBoy.setSituation(mCharsSituation);
+                        if (mUserBoy.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("boy");
                         }
                     } else {
@@ -172,7 +189,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                         mButtonTwoOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserGirl.getSexUser(), 1, 0);
-                        if (mUserGirl.reviewWinner(mCharsSituation, mUserBoy.getSymbolUser(), 1, 0)) {
+                        mUserGirl.setSituation(mCharsSituation);
+                        if (mUserGirl.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserGirl.getSymbolUser())) {
                             outWinner("girl");
                         }
                     } else {
@@ -184,7 +202,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                         mButtonTwoOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserBoy.getSexUser(), 1, 0);
-                        if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 1, 0)) {
+                        mUserBoy.setSituation(mCharsSituation);
+                        if (mUserBoy.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("boy");
                         }
                     } else {
@@ -204,7 +223,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                         mButtonTwoTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserGirl.getSexUser(), 1, 1);
-                        if (mUserGirl.reviewWinner(mCharsSituation, mUserBoy.getSymbolUser(), 1, 1)) {
+                        mUserGirl.setSituation(mCharsSituation);
+                        if (mUserGirl.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserGirl.getSymbolUser())) {
                             outWinner("girl");
                         }
                     } else {
@@ -216,7 +236,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                         mButtonTwoTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserBoy.getSexUser(), 1, 1);
-                        if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 1, 1)) {
+                        mUserBoy.setSituation(mCharsSituation);
+                        if (mUserBoy.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("boy");
                         }
                     } else {
@@ -236,7 +257,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                         mButtonTwoThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserGirl.getSexUser(), 1, 2);
-                        if (mUserGirl.reviewWinner(mCharsSituation, mUserBoy.getSymbolUser(), 1, 2)) {
+                        mUserGirl.setSituation(mCharsSituation);
+                        if (mUserGirl.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserGirl.getSymbolUser())) {
                             outWinner("girl");
                         }
 
@@ -249,7 +271,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                         mButtonTwoThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserBoy.getSexUser(), 1, 2);
-                        if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 1, 2)) {
+                        mUserBoy.setSituation(mCharsSituation);
+                        if (mUserBoy.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("boy");
                         }
                     } else {
@@ -269,7 +292,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                         mButtonThreeOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserGirl.getSexUser(), 2, 0);
-                        if (mUserGirl.reviewWinner(mCharsSituation, mUserBoy.getSymbolUser(), 2, 0)) {
+                        mUserGirl.setSituation(mCharsSituation);
+                        if (mUserGirl.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserGirl.getSymbolUser())) {
                             outWinner("girl");
                         }
                     } else {
@@ -281,7 +305,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                         mButtonThreeOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserBoy.getSexUser(), 2, 0);
-                        if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 2, 0)) {
+                        mUserBoy.setSituation(mCharsSituation);
+                        if (mUserBoy.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("boy");
                         }
                     } else {
@@ -301,7 +326,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                         mButtonThreeTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserGirl.getSexUser(), 2, 1);
-                        if (mUserGirl.reviewWinner(mCharsSituation, mUserBoy.getSymbolUser(), 2, 1)) {
+                        mUserGirl.setSituation(mCharsSituation);
+                        if (mUserGirl.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserGirl.getSymbolUser())) {
                             outWinner("girl");
                         }
                     } else {
@@ -313,7 +339,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                         mButtonThreeTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserBoy.getSexUser(), 2, 1);
-                        if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(),2, 1)) {
+                        mUserBoy.setSituation(mCharsSituation);
+                        if (mUserBoy.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("boy");
                         }
                     } else {
@@ -333,7 +360,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                         mButtonThreeThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserGirl.getSexUser(), 2, 2);
-                        if (mUserGirl.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 2, 2)) {
+                        mUserGirl.setSituation(mCharsSituation);
+                        if (mUserGirl.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("girl");
                         }
 
@@ -346,7 +374,8 @@ public class TicTacToeFragment extends Fragment {
                         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                         mButtonThreeThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                         startGame(mUserBoy.getSexUser(), 2, 2);
-                        if (mUserBoy.reviewWinner(mCharsSituation, mUserGirl.getSymbolUser(), 2, 2)) {
+                        mUserBoy.setSituation(mCharsSituation);
+                        if (mUserBoy.reviewWinner(sGameNameTicTacToe,mCharsSituation, mUserBoy.getSymbolUser())) {
                             outWinner("boy");
                         }
                     } else {
@@ -403,7 +432,14 @@ public class TicTacToeFragment extends Fragment {
     }
 
     private void outWinner(String mUserSex) {
-        String message = mUserSex + "won";
+        String message = mUserSex + " won";
+        if (mUserSex.equals(mUserGirl.getSexUser())) {
+            scoreGirl++;
+            mUserGirl.setScore(scoreGirl);
+        } else {
+            scoreBoy++;
+            mUserBoy.setScore(scoreBoy);
+        }
         mButtonOneOne.setEnabled(false);
         mButtonOneTwo.setEnabled(false);
         mButtonOneThree.setEnabled(false);
@@ -415,6 +451,14 @@ public class TicTacToeFragment extends Fragment {
         mButtonThreeThree.setEnabled(false);
         Snackbar snackbar = Snackbar.make(mLayoutMain, message, Snackbar.LENGTH_LONG);
         snackbar.show();
+        for (int i = 0; i <mRow ; i++) {
+            for (int j = 0; j <mColumn ; j++) {
+                mCharsSituation[i][j]=' ';
+            }
+        }
+        mUserGirl.setSituation(mCharsSituation);
+        mUserBoy.setSituation(mCharsSituation);
+
     }
 
 

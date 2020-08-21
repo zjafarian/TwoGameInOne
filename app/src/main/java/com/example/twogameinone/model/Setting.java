@@ -3,41 +3,50 @@ package com.example.twogameinone.model;
 import java.io.Serializable;
 
 public class Setting implements Serializable {
-    private int mLength = 5;
+    private int mRow = 7;
+    private int mColumn = 6;
     private String mGameName = "";
     private ColorBackground mColorBackground = ColorBackground.White;
+    private static String sStringNameGameTicTacToe ="TicTacToe";
+    private static String sStringNameGameFourInRow = "ForInRow";
 
-    public Setting(int mLength, String mGameName) {
-        this.mLength = mLength;
+    public Setting(String mGameName) {
         this.mGameName = mGameName;
-    }
-
-    public int getmLength() {
-        return mLength;
-    }
-
-    public void setmLength(int mLength) throws Exception {
-        if (mGameName.equals("Four")){
-            if (mLength>=5){
-                this.mLength = mLength;
-            } else throw new Exception("length is lower 5");
+        if (this.mGameName.equals(sStringNameGameTicTacToe)){
+            mRow =3;
+            mColumn=3;
         }
-        this.mLength = mLength;
     }
 
-    public String getmGameName() {
+    public int getRow() {
+        return mRow;
+    }
+
+    public void setRow(int row) {
+        mRow = row;
+    }
+
+    public int getColumn() {
+        return mColumn;
+    }
+
+    public void setColumn(int column) {
+        mColumn = column;
+    }
+
+    public String getGameName() {
         return mGameName;
     }
 
-    public void setmGameName(String mGameName) {
-        this.mGameName = mGameName;
+    public void setGameName(String gameName) {
+        mGameName = gameName;
     }
 
-    public ColorBackground getmColorBackground() {
+    public ColorBackground getColorBackground() {
         return mColorBackground;
     }
 
-    public void setmColorBackground(ColorBackground mColorBackground) {
-        this.mColorBackground = mColorBackground;
+    public void setColorBackground(ColorBackground colorBackground) {
+        mColorBackground = colorBackground;
     }
 }

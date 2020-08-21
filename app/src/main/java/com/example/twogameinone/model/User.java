@@ -1,5 +1,8 @@
 package com.example.twogameinone.model;
 
+import com.example.twogameinone.controller.FourInARowFragment;
+import com.example.twogameinone.controller.TicTacToeFragment;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -7,16 +10,43 @@ public class User implements Serializable {
     private String mSexUser;
     private char mSymbolUser;
     private char[][] mSituation;
-    private int length;
+    private int mIntRow;
+    private int mIntColumn;
     private String mStringGameName;
+    private int score = 0;
 
-
-    public User(String sexUser, char symbolUser, char[][] situation, int length, String stringGameName) {
+    public User(String sexUser, char symbolUser, char[][] situation, int row, int column, String stringGameName) {
         mSexUser = sexUser;
         mSymbolUser = symbolUser;
+        this.mIntRow = row;
+        this.mIntColumn = column;
+        mSituation = new char[row][column];
         mSituation = situation;
-        this.length = length;
         mStringGameName = stringGameName;
+    }
+
+    public int getIntRow() {
+        return mIntRow;
+    }
+
+    public void setIntRow(int intRow) {
+        mIntRow = intRow;
+    }
+
+    public int getIntColumn() {
+        return mIntColumn;
+    }
+
+    public void setIntColumn(int intColumn) {
+        mIntColumn = intColumn;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public String getStringGameName() {
@@ -51,101 +81,168 @@ public class User implements Serializable {
         mSituation = situation;
     }
 
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public boolean reviewWinner(char[][] situation, char symbolUserTwo, int row, int column) {
+    public boolean reviewWinner(String gameName, char[][] situation, char symbolUser) {
         this.mSituation = situation;
-
-        if (checkRow(symbolUserTwo))
-            return true;
-        else if (checkColumn(symbolUserTwo))
-            return true;
-        else if (checkDiagonalOne(symbolUserTwo))
-            return true;
-        else if (checkDiagonalTwo(symbolUserTwo))
-            return true;
-
+        if (gameName.equals(TicTacToeFragment.sGameNameTicTacToe)) {
+            if (checkRow(symbolUser))
+                return true;
+            else if (checkColumn(symbolUser))
+                return true;
+            else if (checkDiagonalOne(symbolUser))
+                return true;
+            else if (checkDiagonalTwo(symbolUser))
+                return true;
+        } else if (gameName.equals(FourInARowFragment.sGameNameFourInRow)) {
+            if (checkRowFour(symbolUser))
+                return true;
+            else if (checkColumnFour(symbolUser))
+                return true;
+            else if (checkDiagonalOneFour(symbolUser))
+                return true;
+            else if (checkDiagonalTwoFour(symbolUser))
+                return true;
+        }
 
         return false;
     }
 
-    private boolean checkRow(char symbolUserTwo) {
+    private boolean checkRow(char symbolUser) {
         boolean check = false;
-        int j = 0;
-        for (int i = 0; i < mSituation.length; i++) {
-            while (j < mSituation.length - 1) {
-                if (mSituation[i][0] == mSymbolUser || mSituation[i][0] == symbolUserTwo) {
-                    if (mSituation[i][0] == mSituation[i][++j]) {
-                        check = true;
-                    } else check = false;
-                } else break;
+        int counter = 0;
+        for (int i = 0; i < mIntRow; i++) {
+            for (int j = 0; j < mIntColumn; j++) {
+                if (mSituation[i][j] == symbolUser)
+                    counter++;
             }
-            if (check) {
+            if (counter == mIntRow) {
+                check = true;
+                return check;
+            } else counter = 0;
+        }
+
+        return check;
+    }
+
+    private boolean checkRowFour(char symbolUser) {
+        boolean check = false;
+        int counter = 0;
+        for (int i = mIntRow - 1; i >= 0; i--) {
+            for (int j = 0; j < mIntColumn; j++) {
+                if (mSituation[i][j] == symbolUser) {
+                    counter++;
+                    if (counter == 4) {
+                        check = true;
+                        return check;
+                    }
+                }
+            }
+            counter = 0;
+        }
+        return check;
+    }
+
+    private boolean checkColumn(char symbolUser) {
+        boolean check = false;
+        int counter = 0;
+
+        for (int i = 0; i < mIntColumn; i++) {
+            for (int j = 0; j < mIntRow; j++) {
+                if (mSituation[j][i] == symbolUser)
+                    counter++;
+            }
+            if (counter == mIntRow) {
+                check = true;
+                return check;
+            } else counter = 0;
+        }
+        return check;
+    }
+
+    private boolean checkColumnFour(char symbolUser) {
+        boolean check = false;
+        int counter = 0;
+        for (int i = 0; i < mIntColumn; i++) {
+            for (int j = mIntRow - 1; j >= 0; j--) {
+                if (mSituation[j][i] == symbolUser) {
+                    counter++;
+                    if (counter == 4) {
+                        check = true;
+                        return check;
+                    }
+                }
+            }
+            counter = 0;
+        }
+        return check;
+    }
+
+    private boolean checkDiagonalOne(char symbolUser) {
+        boolean check = false;
+        int counter = 0;
+        int i = 0;
+        while (i < mIntRow - 1) {
+            if (mSituation[i][i] == symbolUser) {
+                counter++;
+            }
+            i++;
+        }
+        if (counter == mIntRow)
+            check = true;
+        return check;
+    }
+
+    private boolean checkDiagonalOneFour(char symbolUser) {
+        boolean check = false;
+        int counter = 0;
+        int i = mIntRow - 1;
+        int j = mIntColumn - 1;
+        while (i >= 0 && j >= 0) {
+            if (mSituation[i][j] == symbolUser)
+                counter++;
+            if (counter == 4) {
+                check = true;
                 return check;
             }
-            j = 0;
+            i--;
+            j--;
         }
-        return false;
+        return check;
     }
 
-    private boolean checkColumn(char symbolUserTwo) {
+    private boolean checkDiagonalTwo(char symbolUser) {
         boolean check = false;
-        int j = 0;
-        for (int i = 0; i < mSituation.length; i++) {
-            while (j < mSituation.length - 1) {
-                if (mSituation[0][i] == mSymbolUser || mSituation[0][i] == symbolUserTwo) {
-                    if (mSituation[0][i] == mSituation[++j][i]) {
-                        check = true;
-                    } else check = false;
-                } else break;
+        int counter = 0;
+        int j = mIntColumn - 1;
+        int i = 0;
+        while (i < mIntRow - 1) {
+            if (mSituation[i][j] == symbolUser)
+                counter++;
+            i++;
+            j--;
+        }
+        if (counter == mIntRow)
+            check = true;
+        else counter = 0;
+        return check;
+    }
 
-            }
-            if (check) {
+    private boolean checkDiagonalTwoFour(char symbolUser) {
+        boolean check = false;
+        int counter = 0;
+        int i = mIntRow - 1;
+        int j = 0;
+        while (i >= 0 && j < mIntColumn) {
+            if (mSituation[i][j] == symbolUser)
+                counter++;
+            if (counter == 4) {
+                check = true;
                 return check;
             }
-            j = 0;
+            i--;
+            j++;
         }
-        return false;
+        return check;
     }
 
-    private boolean checkDiagonalOne(char symbolUserTwo) {
-        boolean check = false;
-        int i = 0;
-        while (i < mSituation.length - 1) {
-            if (mSituation[0][0] == mSymbolUser || mSituation[0][0] == symbolUserTwo) {
-                if (mSituation[0][0] == mSituation[++i][i]) {
-                    check = true;
-                } else check = false;
-            } else break;
-        }
-        if (check) {
-            return check;
-        }
-        return false;
-    }
-
-    private boolean checkDiagonalTwo(char symbolUserTwo) {
-        boolean check = false;
-        int j = mSituation.length - 1;
-        int i = 0;
-        while (j >= 0) {
-            if (mSituation[0][j] == mSymbolUser || mSituation[0][j] == symbolUserTwo) {
-                if (mSituation[0][j] == mSituation[++i][--j]) {
-                    check = true;
-                } else check = false;
-            }else break;
-
-        }
-        if (check) {
-            return check;
-        }
-        return false;
-    }
 
 }
