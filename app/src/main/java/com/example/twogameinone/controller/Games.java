@@ -40,6 +40,7 @@ public class Games extends AppCompatActivity {
                     TicTacToeFragment ticTacToeFragment = new TicTacToeFragment();
                     fragmentManager
                             .beginTransaction()
+                            .remove(new FourInARowFragment())
                             .replace(R.id.fragment_container, ticTacToeFragment)
                             .commit();
                 }
@@ -53,6 +54,7 @@ public class Games extends AppCompatActivity {
                     FourInARowFragment fourInARowFragment = new FourInARowFragment();
                     fragmentManager
                             .beginTransaction()
+                            .remove(new TicTacToeFragment())
                             .replace(R.id.fragment_container,fourInARowFragment)
                             .commit();
                 }

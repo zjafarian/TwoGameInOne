@@ -33,31 +33,26 @@ public class TicTacToeFragment extends Fragment {
     public static final String SAVE_USER_BOY = "save_user_boy";
     public static final String CHECK_SETTING_TIC_TAC_TOE = "check_setting_tic_tac_toe";
     public static final String SAVE_SETTING_TIC_TOC_TOE = "save_setting_tic_toc_toe";
+    public static final String SAVE_ROW = "save_row";
+    public static final String SAVE_COLUMN = "save_column";
     private ImageButton mImageButtonActiveUserGirl;
     private ImageButton mImageButtonActiveUserBoy;
     private ImageButton mImageButtonDeactivateGirl;
     private ImageButton mImageButtonDeactivateBoy;
     private ImageButton mImageButtonSetting;
-    private Button mButtonOneOne;
-    private Button mButtonOneTwo;
-    private Button mButtonOneThree;
-    private Button mButtonTwoOne;
-    private Button mButtonTwoTwo;
-    private Button mButtonTwoThree;
-    private Button mButtonThreeOne;
-    private Button mButtonThreeTwo;
-    private Button mButtonThreeThree;
+    private Button[][] mButtons;
     private User mUserGirl;
     private User mUserBoy;
     private int mRow;
     private int mColumn;
-    private boolean mCheckSettingTicTocToe=false;
+    private boolean mCheckSettingTicTocToe = false;
     private Setting mSettingTicTocTOe;
     private char[][] mCharsSituation;
     private View mLayoutMain;
     public static String sGameNameTicTacToe = "TicTacToe";
     private int scoreGirl = 0;
     private int scoreBoy = 0;
+
 
 
     public TicTacToeFragment() {
@@ -79,10 +74,12 @@ public class TicTacToeFragment extends Fragment {
         }
         mUserGirl = new User("girl", '*', mCharsSituation, mRow, mColumn, "TicTacToe");
         mUserBoy = new User("boy", 'o', mCharsSituation, mRow, mColumn, "TicTocToe");
-        if (savedInstanceState!=null){
+        if (savedInstanceState != null) {
             mUserGirl = (User) savedInstanceState.getSerializable(SAVE_USER_GIRL);
             mUserBoy = (User) savedInstanceState.getSerializable(SAVE_USER_BOY);
-            mCharsSituation=mUserGirl.getSituation();
+            mCharsSituation = mUserGirl.getSituation();
+            mRow = savedInstanceState.getInt(SAVE_ROW);
+            mColumn = savedInstanceState.getInt(SAVE_COLUMN);
             if (mCheckSettingTicTocToe) {
                 mCheckSettingTicTocToe = savedInstanceState.getBoolean(SAVE_SETTING_TIC_TOC_TOE);
                 setRowAndColumn();
@@ -96,12 +93,36 @@ public class TicTacToeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tic_tac_toe, container, false);
         setViewId(view);
+        mButtons = new Button[][]{{view.findViewById(R.id.btn_1_1), view.findViewById(R.id.btn_1_2),
+                view.findViewById(R.id.btn_1_3)}, {view.findViewById(R.id.btn_2_1),
+                view.findViewById(R.id.btn_2_2), view.findViewById(R.id.btn_2_3)},
+                {view.findViewById(R.id.btn_3_1), view.findViewById(R.id.btn_3_2),
+                        view.findViewById(R.id.btn_3_3)}};
+        if (savedInstanceState != null) {
+            changeBackgroundButton();
+        }
         if (mCheckSettingTicTocToe) {
             changeColorBackground();
             changeSituationFirstPlayer();
         }
-        setListener();
+        setListener(view);
         return view;
+    }
+
+    private void changeBackgroundButton() {
+        for (int i = 0; i < mRow; i++) {
+            for (int j = 0; j < mColumn; j++) {
+                if (mCharsSituation[i][j] == '*') {
+                    Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
+                    mButtons[i][j].setCompoundDrawablesWithIntrinsicBounds(icon,
+                            null, null, null);
+                } else if (mCharsSituation[i][j] == 'o') {
+                    Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
+                    mButtons[i][j].setCompoundDrawablesWithIntrinsicBounds(icon,
+                            null, null, null);
+                }
+            }
+        }
     }
 
 
@@ -111,7 +132,7 @@ public class TicTacToeFragment extends Fragment {
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
         if (requestCode == EXTRA_TIC_TAC_TOE_REQUEST_CODE) {
-            mCheckSettingTicTocToe=true;
+            mCheckSettingTicTocToe = true;
             mSettingTicTocTOe = (Setting) data.getSerializableExtra(SettingFragment.EXTRA_GET_SETTING);
             changeColorBackground();
             changeSituationFirstPlayer();
@@ -122,10 +143,12 @@ public class TicTacToeFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(SAVE_USER_GIRL,mUserGirl);
-        outState.putSerializable(SAVE_USER_BOY,mUserBoy);
-        outState.putBoolean(CHECK_SETTING_TIC_TAC_TOE,mCheckSettingTicTocToe);
-        outState.putSerializable(SAVE_SETTING_TIC_TOC_TOE,mSettingTicTocTOe);
+        outState.putSerializable(SAVE_USER_GIRL, mUserGirl);
+        outState.putSerializable(SAVE_USER_BOY, mUserBoy);
+        outState.putBoolean(CHECK_SETTING_TIC_TAC_TOE, mCheckSettingTicTocToe);
+        outState.putSerializable(SAVE_SETTING_TIC_TOC_TOE, mSettingTicTocTOe);
+        outState.putInt(SAVE_ROW, mRow);
+        outState.putInt(SAVE_COLUMN, mColumn);
     }
 
     private void setRowAndColumn() {
@@ -164,313 +187,35 @@ public class TicTacToeFragment extends Fragment {
         }
     }
 
-    private void setListener() {
-        mButtonOneOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[0][0] == ' ') {
-                        mButtonOneOne.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
-                        mButtonOneOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserGirl.getSexUser(), 0, 0);
-                        mUserGirl.setSituation(mCharsSituation);
-                        if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserGirl.getSymbolUser())) {
-                            outWinner("girl");
+    private void setListener(View view) {
+        for (int i = 0; i < mRow; i++) {
+            final int finalI = i;
+            for (int j = 0; j < mColumn; j++) {
+                final int finalJ = j;
+                mButtons[i][j].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
+                            onTogglePlayer(true, finalI, finalJ);
+                            mButtons[finalI][finalJ].setPadding(90, 10, 0, 0);
+                            Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
+                            mButtons[finalI][finalJ].setCompoundDrawablesWithIntrinsicBounds(icon,
+                                    null, null, null);
+                            mButtons[finalI][finalJ].setEnabled(false);
+                            findWinner(true);
+                        } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
+                            onTogglePlayer(false, finalI, finalJ);
+                            mButtons[finalI][finalJ].setPadding(90, 10, 0, 0);
+                            Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
+                            mButtons[finalI][finalJ].setCompoundDrawablesWithIntrinsicBounds(icon,
+                                    null, null, null);
+                            mButtons[finalI][finalJ].setEnabled(false);
+                            findWinner(false);
                         }
-                    } else {
-                        setToast();
                     }
-                } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[0][0] == ' ') {
-                        mButtonOneOne.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
-                        mButtonOneOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserBoy.getSexUser(), 0, 0);
-                        mUserBoy.setSituation(mCharsSituation);
-                        if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("boy");
-                        }
-                    } else {
-                        setToast();
-                    }
-                }
+                });
             }
-        });
-
-        mButtonOneTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[0][1] == ' ') {
-                        mButtonOneTwo.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
-                        mButtonOneTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserGirl.getSexUser(), 0, 1);
-                        mUserGirl.setSituation(mCharsSituation);
-                        if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserGirl.getSymbolUser())) {
-                            outWinner("girl");
-                        }
-                    } else {
-                        setToast();
-                    }
-                } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[0][1] == ' ') {
-                        mButtonOneTwo.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
-                        mButtonOneTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserBoy.getSexUser(), 0, 1);
-                        mUserBoy.setSituation(mCharsSituation);
-                        if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("boy");
-                        }
-                    } else {
-                        setToast();
-                    }
-                }
-
-            }
-        });
-
-        mButtonOneThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[0][2] == ' ') {
-                        mButtonOneThree.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
-                        mButtonOneThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserGirl.getSexUser(), 0, 2);
-                        mUserGirl.setSituation(mCharsSituation);
-                        if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserGirl.getSymbolUser())) {
-                            outWinner("girl");
-                        }
-                    } else {
-                        setToast();
-                    }
-                } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[0][2] == ' ') {
-                        mButtonOneThree.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
-                        mButtonOneThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserBoy.getSexUser(), 0, 2);
-                        mUserBoy.setSituation(mCharsSituation);
-                        if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("boy");
-                        }
-                    } else {
-                        setToast();
-                    }
-                }
-
-            }
-        });
-
-        mButtonTwoOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[1][0] == ' ') {
-                        mButtonTwoOne.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
-                        mButtonTwoOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserGirl.getSexUser(), 1, 0);
-                        mUserGirl.setSituation(mCharsSituation);
-                        if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserGirl.getSymbolUser())) {
-                            outWinner("girl");
-                        }
-                    } else {
-                        setToast();
-                    }
-                } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[1][0] == ' ') {
-                        mButtonTwoOne.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
-                        mButtonTwoOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserBoy.getSexUser(), 1, 0);
-                        mUserBoy.setSituation(mCharsSituation);
-                        if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("boy");
-                        }
-                    } else {
-                        setToast();
-                    }
-                }
-
-            }
-        });
-
-        mButtonTwoTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[1][1] == ' ') {
-                        mButtonTwoTwo.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
-                        mButtonTwoTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserGirl.getSexUser(), 1, 1);
-                        mUserGirl.setSituation(mCharsSituation);
-                        if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserGirl.getSymbolUser())) {
-                            outWinner("girl");
-                        }
-                    } else {
-                        setToast();
-                    }
-                } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[1][1] == ' ') {
-                        mButtonTwoTwo.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
-                        mButtonTwoTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserBoy.getSexUser(), 1, 1);
-                        mUserBoy.setSituation(mCharsSituation);
-                        if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("boy");
-                        }
-                    } else {
-                        setToast();
-                    }
-                }
-
-            }
-        });
-
-        mButtonTwoThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[1][2] == ' ') {
-                        mButtonTwoThree.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
-                        mButtonTwoThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserGirl.getSexUser(), 1, 2);
-                        mUserGirl.setSituation(mCharsSituation);
-                        if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserGirl.getSymbolUser())) {
-                            outWinner("girl");
-                        }
-
-                    } else {
-                        setToast();
-                    }
-                } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[1][2] == ' ') {
-                        mButtonTwoThree.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
-                        mButtonTwoThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserBoy.getSexUser(), 1, 2);
-                        mUserBoy.setSituation(mCharsSituation);
-                        if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("boy");
-                        }
-                    } else {
-                        setToast();
-                    }
-                }
-
-            }
-        });
-
-        mButtonThreeOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[2][0] == ' ') {
-                        mButtonThreeOne.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
-                        mButtonThreeOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserGirl.getSexUser(), 2, 0);
-                        mUserGirl.setSituation(mCharsSituation);
-                        if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserGirl.getSymbolUser())) {
-                            outWinner("girl");
-                        }
-                    } else {
-                        setToast();
-                    }
-                } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[2][0] == ' ') {
-                        mButtonThreeOne.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
-                        mButtonThreeOne.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserBoy.getSexUser(), 2, 0);
-                        mUserBoy.setSituation(mCharsSituation);
-                        if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("boy");
-                        }
-                    } else {
-                        setToast();
-                    }
-                }
-
-            }
-        });
-
-        mButtonThreeTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[2][1] == ' ') {
-                        mButtonThreeTwo.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
-                        mButtonThreeTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserGirl.getSexUser(), 2, 1);
-                        mUserGirl.setSituation(mCharsSituation);
-                        if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserGirl.getSymbolUser())) {
-                            outWinner("girl");
-                        }
-                    } else {
-                        setToast();
-                    }
-                } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[2][1] == ' ') {
-                        mButtonThreeTwo.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
-                        mButtonThreeTwo.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserBoy.getSexUser(), 2, 1);
-                        mUserBoy.setSituation(mCharsSituation);
-                        if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("boy");
-                        }
-                    } else {
-                        setToast();
-                    }
-                }
-
-            }
-        });
-
-        mButtonThreeThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[2][2] == ' ') {
-                        mButtonThreeThree.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
-                        mButtonThreeThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserGirl.getSexUser(), 2, 2);
-                        mUserGirl.setSituation(mCharsSituation);
-                        if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("girl");
-                        }
-
-                    } else {
-                        setToast();
-                    }
-                } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
-                    if (mCharsSituation[2][2] == ' ') {
-                        mButtonThreeThree.setPadding(90, 10, 0, 0);
-                        Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
-                        mButtonThreeThree.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                        startGame(mUserBoy.getSexUser(), 2, 2);
-                        mUserBoy.setSituation(mCharsSituation);
-                        if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
-                            outWinner("boy");
-                        }
-                    } else {
-                        setToast();
-                    }
-                }
-
-            }
-        });
+        }
 
         mImageButtonSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -485,28 +230,51 @@ public class TicTacToeFragment extends Fragment {
 
     }
 
-    private void startGame(String userSex, int row, int column) {
-        if (userSex.equals("girl")) {
-            mCharsSituation[row][column] = '*';
+    private void findWinner(boolean isGirl) {
+        if (isGirl) {
+            if (mUserGirl.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserGirl.getSymbolUser())) {
+                outWinner("Girl");
+                for (int i = 0; i < mRow; i++) {
+                    for (int j = 0; j < mColumn; j++) {
+                        mCharsSituation[i][j] = ' ';
+                    }
+                }
+                mUserGirl.setSituation(mCharsSituation);
+                mUserBoy.setSituation(mCharsSituation);
+            }
+
+        } else {
+            if (mUserBoy.reviewWinner(sGameNameTicTacToe, mCharsSituation, mUserBoy.getSymbolUser())) {
+                outWinner("Boy");
+                for (int i = 0; i < mRow; i++) {
+                    for (int j = 0; j < mColumn; j++) {
+                        mCharsSituation[i][j] = ' ';
+                    }
+                }
+                mUserGirl.setSituation(mCharsSituation);
+                mUserBoy.setSituation(mCharsSituation);
+            }
+        }
+    }
+
+    private void onTogglePlayer(boolean isGirl, int indexI, int indexJ) {
+        if (isGirl) {
+            mCharsSituation[indexI][indexJ] = '*';
+            mUserGirl.setSituation(mCharsSituation);
+            mUserBoy.setSituation(mCharsSituation);
             mImageButtonActiveUserGirl.setVisibility(View.GONE);
             mImageButtonDeactivateGirl.setVisibility(View.VISIBLE);
             mImageButtonActiveUserBoy.setVisibility(View.VISIBLE);
             mImageButtonDeactivateBoy.setVisibility(View.GONE);
-        } else if (userSex.equals("boy")) {
-            mCharsSituation[row][column] = 'o';
+        } else {
+            mCharsSituation[indexI][indexJ] = 'o';
+            mUserBoy.setSituation(mCharsSituation);
+            mUserGirl.setSituation(mCharsSituation);
             mImageButtonActiveUserBoy.setVisibility(View.GONE);
             mImageButtonDeactivateBoy.setVisibility(View.VISIBLE);
             mImageButtonActiveUserGirl.setVisibility(View.VISIBLE);
             mImageButtonDeactivateGirl.setVisibility(View.GONE);
         }
-
-
-    }
-
-    private void setToast() {
-        Toast toast = Toast.makeText(getContext(), R.string.selectable_cell, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.BOTTOM, 0, 0);
-        toast.show();
     }
 
     private void setViewId(View view) {
@@ -515,15 +283,6 @@ public class TicTacToeFragment extends Fragment {
         mImageButtonDeactivateGirl = view.findViewById(R.id.image_btn_user_girl_deactive);
         mImageButtonDeactivateBoy = view.findViewById(R.id.image_btn_user_boy_deactive);
         mImageButtonSetting = view.findViewById(R.id.image_btn_setting);
-        mButtonOneOne = view.findViewById(R.id.btn_1_1);
-        mButtonOneTwo = view.findViewById(R.id.btn_1_2);
-        mButtonOneThree = view.findViewById(R.id.btn_1_3);
-        mButtonTwoOne = view.findViewById(R.id.btn_2_1);
-        mButtonTwoTwo = view.findViewById(R.id.btn_2_2);
-        mButtonTwoThree = view.findViewById(R.id.btn_2_3);
-        mButtonThreeOne = view.findViewById(R.id.btn_3_1);
-        mButtonThreeTwo = view.findViewById(R.id.btn_3_2);
-        mButtonThreeThree = view.findViewById(R.id.btn_3_3);
         mLayoutMain = view.findViewById(R.id.layout_main);
     }
 
@@ -536,24 +295,13 @@ public class TicTacToeFragment extends Fragment {
             scoreBoy++;
             mUserBoy.setScore(scoreBoy);
         }
-        mButtonOneOne.setEnabled(false);
-        mButtonOneTwo.setEnabled(false);
-        mButtonOneThree.setEnabled(false);
-        mButtonTwoOne.setEnabled(false);
-        mButtonTwoTwo.setEnabled(false);
-        mButtonTwoThree.setEnabled(false);
-        mButtonThreeOne.setEnabled(false);
-        mButtonThreeTwo.setEnabled(false);
-        mButtonThreeThree.setEnabled(false);
         Snackbar snackbar = Snackbar.make(mLayoutMain, message, Snackbar.LENGTH_LONG);
         snackbar.show();
         for (int i = 0; i < mRow; i++) {
             for (int j = 0; j < mColumn; j++) {
-                mCharsSituation[i][j] = ' ';
+                mButtons[i][j].setEnabled(false);
             }
         }
-        mUserGirl.setSituation(mCharsSituation);
-        mUserBoy.setSituation(mCharsSituation);
 
     }
 

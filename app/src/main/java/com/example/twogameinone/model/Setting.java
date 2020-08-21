@@ -3,8 +3,8 @@ package com.example.twogameinone.model;
 import java.io.Serializable;
 
 public class Setting implements Serializable {
-    private int mRow = 7;
-    private int mColumn = 6;
+    private int mRow;
+    private int mColumn;
     private String mGameName = "";
     private ColorBackground mColorBackground = ColorBackground.White;
     private static String sStringNameGameTicTacToe ="TicTacToe";
