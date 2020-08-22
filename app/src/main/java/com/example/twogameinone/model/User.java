@@ -126,17 +126,21 @@ public class User implements Serializable {
     private boolean checkRowFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
+        int j = 0;
+        int count = 0;
         for (int i = mIntRow - 1; i >= 0; i--) {
-            for (int j = 0; j < mIntColumn; j++) {
-                if (mSituation[i][j] == symbolUser) {
-                    counter++;
-                    if (counter == 4) {
-                        check = true;
-                        return check;
+            while (j < mIntColumn - 1) {
+                for (int k = j; k < j + 4; k++) {
+                    if (mSituation[i][k] == symbolUser) {
+                        counter++;
                     }
                 }
+                if (counter == 4) {
+                    check = true;
+                    return check;
+                } else counter = 0;
+                j++;
             }
-            counter = 0;
         }
         return check;
     }
@@ -161,17 +165,20 @@ public class User implements Serializable {
     private boolean checkColumnFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
+        int j = mIntRow - 1;
         for (int i = 0; i < mIntColumn; i++) {
-            for (int j = mIntRow - 1; j >= 0; j--) {
-                if (mSituation[j][i] == symbolUser) {
-                    counter++;
-                    if (counter == 4) {
-                        check = true;
-                        return check;
+            while (j >= 0) {
+                for (int k = j; k > j - 4; k--) {
+                    if (mSituation[k][i] == symbolUser) {
+                        counter++;
                     }
                 }
+                if (counter == 4) {
+                    check = true;
+                    return check;
+                } else counter = 0;
+                j--;
             }
-            counter = 0;
         }
         return check;
     }
@@ -194,17 +201,30 @@ public class User implements Serializable {
     private boolean checkDiagonalOneFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
+        int index = 1;
+        int range = 0;
         int i = mIntRow - 1;
         int j = mIntColumn - 1;
-        while (i >= 0 && j >= 0) {
-            if (mSituation[i][j] == symbolUser)
-                counter++;
+        int lengthRow = i - 4;
+        int lengthColumn = j - 4;
+        while (i >= lengthRow && j >= lengthColumn) {
+            if (range < 4) {
+                if (mSituation[i][j] == symbolUser) {
+                    counter++;
+                }
+                i -= 1;
+                j -= 1;
+                range++;
+            }
             if (counter == 4) {
                 check = true;
                 return check;
             }
-            i--;
-            j--;
+            counter = 0;
+            range = 0;
+            index++;
+            i = mIntRow - index;
+            j = mIntColumn - index;
         }
         return check;
     }
@@ -229,18 +249,32 @@ public class User implements Serializable {
     private boolean checkDiagonalTwoFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
+        int index = 1;
+        int range = 0;
         int i = mIntRow - 1;
         int j = 0;
-        while (i >= 0 && j < mIntColumn) {
-            if (mSituation[i][j] == symbolUser)
-                counter++;
+        int lengthRow = i - 4;
+        int lengthColumn = j + 4;
+        while (i >= lengthRow && j <= lengthColumn) {
+            if (range < 4) {
+                if (mSituation[i][j] == symbolUser) {
+                    counter++;
+                }
+                i -= 1;
+                j -= 1;
+                range++;
+            }
             if (counter == 4) {
                 check = true;
                 return check;
             }
-            i--;
-            j++;
+            counter = 0;
+            range = 0;
+            index++;
+            i = mIntRow - index;
+            j = mIntColumn + index;
         }
+
         return check;
     }
 

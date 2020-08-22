@@ -3,14 +3,13 @@ package com.example.twogameinone.model;
 import java.io.Serializable;
 
 public class Setting implements Serializable {
-    private int mRow;
-    private int mColumn;
-    private String mGameName = "";
+    private int mRow=5;
+    private int mColumn=5;
+    private String mGameName = sStringNameGameTicTacToe;
     private ColorBackground mColorBackground = ColorBackground.White;
     private static String sStringNameGameTicTacToe ="TicTacToe";
     private static String sStringNameGameFourInRow = "ForInRow";
-    private String sexUser;
-
+    private String sexUser="girl";
 
     public Setting(String mGameName) {
         this.mGameName = mGameName;

@@ -3,6 +3,7 @@ package com.example.twogameinone.controller;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -22,13 +23,17 @@ import static com.example.twogameinone.controller.FourInARowFragment.EXTRA_IS_FO
 import static com.example.twogameinone.controller.FourInARowFragment.EXTRA_PUT_SETTING_FOUR_IN_ROW;
 import static com.example.twogameinone.controller.TicTacToeFragment.EXTRA_IS_TIC_TAC_TOE;
 import static com.example.twogameinone.controller.TicTacToeFragment.EXTRA_PUT_SETTING_TIC_TOC_TOE;
+import static com.example.twogameinone.controller.TicTacToeFragment.sGameNameTicTacToe;
 import static com.example.twogameinone.model.ColorBackground.Blue;
+import static com.example.twogameinone.model.ColorBackground.Green;
 import static com.example.twogameinone.model.ColorBackground.Red;
 import static com.example.twogameinone.model.ColorBackground.White;
 
 
 public class SettingFragment extends Fragment {
     public static final String EXTRA_GET_SETTING = "getSetting";
+    public static final String SAVE_SETTING = "save_setting";
+    public static final String EXTRA_IS_SETTING = "IsSetting";
     private RadioGroup mRadioGroupRow;
     private RadioGroup mRadioGroupColumn;
     private RadioButton mRadioButtonGirl;
@@ -36,8 +41,8 @@ public class SettingFragment extends Fragment {
     private RadioButton[] mRadioButtonsColors;
     private RadioButton[] mRadioButtonsRows;
     private RadioButton[] mRadioButtonsColumns;
-    private Setting mSetting;
-    private Setting defaultSetting;
+    private Setting mSetting = new Setting(sGameNameTicTacToe);
+    private Setting defaultSetting = new Setting(sGameNameTicTacToe);
     private Button mButtonSave;
     private Button mButtonDiscard;
     private int[] arrayColorId = {R.id.btn_color_red, R.id.btn_color_blue, R.id.btn_color_green,
@@ -63,8 +68,12 @@ public class SettingFragment extends Fragment {
             mSetting = new Setting(FourInARowFragment.sGameNameFourInRow);
             mSetting = (Setting) getActivity().getIntent().getSerializableExtra(EXTRA_PUT_SETTING_FOUR_IN_ROW);
         }
+        if (savedInstanceState != null) {
+            mSetting = (Setting) savedInstanceState.getSerializable(SAVE_SETTING);
+        }
         defaultSetting = mSetting;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,12 +93,93 @@ public class SettingFragment extends Fragment {
                 view.findViewById(R.id.btn_radio_6_column), view.findViewById(R.id.btn_radio_7_column),
                 view.findViewById(R.id.btn_radio_8_column), view.findViewById(R.id.btn_radio_9_column),
                 view.findViewById(R.id.btn_radio_10_column)};
-        setFieldSetting();
+        setFieldSettingFragment();
+        setSettingField();
+        if (savedInstanceState != null) {
+            setFieldSettingFragment();
+            setSettingField();
+        }
         setListener(view);
         return view;
     }
 
-    private void setFieldSetting() {
+    private void setSettingField() {
+        for (int i = 0; i < mRadioButtonsRows.length; i++) {
+            if (mRadioButtonsRows[i].isChecked()) {
+                switch (arrayRowId[i]) {
+                    case R.id.btn_radio_5_row:
+                        mSetting.setRow(5);
+                        break;
+                    case R.id.btn_radio_6_row:
+                        mSetting.setRow(6);
+                        break;
+                    case R.id.btn_radio_7_row:
+                        mSetting.setRow(7);
+                        break;
+                    case R.id.btn_radio_8_row:
+                        mSetting.setRow(8);
+                        break;
+                    case R.id.btn_radio_9_row:
+                        mSetting.setRow(9);
+                        break;
+                    case R.id.btn_radio_10_row:
+                        mSetting.setRow(10);
+                        break;
+                }
+            }
+        }
+
+        for (int i = 0; i < mRadioButtonsColumns.length; i++) {
+            if (mRadioButtonsColumns[i].isChecked()) {
+                switch (arrayColumnId[i]) {
+                    case R.id.btn_radio_5_column:
+                        mSetting.setColumn(5);
+                        break;
+                    case R.id.btn_radio_6_column:
+                        mSetting.setColumn(6);
+                        break;
+                    case R.id.btn_radio_7_column:
+                        mSetting.setColumn(7);
+                        break;
+                    case R.id.btn_radio_8_column:
+                        mSetting.setColumn(8);
+                        break;
+                    case R.id.btn_radio_9_column:
+                        mSetting.setColumn(9);
+                        break;
+                    case R.id.btn_radio_10_column:
+                        mSetting.setColumn(10);
+                        break;
+                }
+            }
+        }
+
+        if (mRadioButtonGirl.isChecked()){
+            mSetting.setSexUser("girl");
+        } else if (mRadioButtonBoy.isChecked())
+            mSetting.setSexUser("boy");
+
+        for (int i = 0; i <mRadioButtonsColors.length ; i++) {
+            switch (arrayColorId[i]){
+                case R.id.btn_color_red:
+                    mSetting.setColorBackground(Red);
+                    break;
+                case R.id.btn_color_blue:
+                    mSetting.setColorBackground(Blue);
+                    break;
+                case R.id.btn_color_green:
+                    mSetting.setColorBackground(Green);
+                    break;
+                case R.id.btn_color_white:
+                    mSetting.setColorBackground(White);
+                    break;
+            }
+
+        }
+
+    }
+
+    private void setFieldSettingFragment() {
         switch (mSetting.getRow()) {
             case 5:
                 mRadioButtonsRows[0].setChecked(true);
@@ -165,13 +255,17 @@ public class SettingFragment extends Fragment {
         mRadioGroupColumn = view.findViewById(R.id.btn_radio_group_column);
         mRadioButtonGirl = view.findViewById(R.id.btn_user_girl);
         mRadioButtonBoy = view.findViewById(R.id.btn_user_boy);
+        mButtonSave = view.findViewById(R.id.btn_save);
+        mButtonDiscard = view.findViewById(R.id.btn_discard);
     }
 
     private void setListener(View view) {
-        if (mSetting.getGameName() == TicTacToeFragment.sGameNameTicTacToe) {
-            for (int id : arrayRowId) {
-                final RadioButton btn = view.findViewById(id);
-                btn.setEnabled(false);
+        if (mSetting.getGameName().equals(TicTacToeFragment.sGameNameTicTacToe)) {
+            for (int i = 0; i < mRadioButtonsRows.length; i++) {
+                mRadioButtonsRows[i].setEnabled(false);
+            }
+            for (int i = 0; i < mRadioButtonsColumns.length; i++) {
+                mRadioButtonsColumns[i].setEnabled(false);
             }
             mRadioGroupRow.setEnabled(false);
             mRadioGroupColumn.setEnabled(false);
@@ -279,6 +373,7 @@ public class SettingFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_GET_SETTING, mSetting);
+                intent.putExtra(EXTRA_IS_SETTING,true);
                 getActivity().setResult(RESULT_OK, intent);
                 getActivity().finish();
             }
@@ -295,5 +390,9 @@ public class SettingFragment extends Fragment {
 
     }
 
-
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVE_SETTING, mSetting);
+    }
 }

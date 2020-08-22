@@ -96,14 +96,31 @@
     </LinearLayout>
 
 
-
     <ImageButton
         android:id="@+id/image_btn_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="10dp"
         android:background="@android:drawable/list_selector_background"
         android:src="@drawable/ic_setting" />
+
+    <Button
+        android:id="@+id/btn_finish_four"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="4dp"
+        android:text="@string/btn_finish"
+        app:backgroundTint="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/btn_start_four"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="4dp"
+        android:text="@string/btn_start_again"
+        app:backgroundTint="@color/colorAccent" />
 
 </FrameLayout>

@@ -19,5 +19,7 @@
     <string name="btn_8">8</string>
     <string name="btn_9">9</string>
     <string name="btn_10">10</string>
+    <string name="btn_finish">Finish</string>
+    <string name="btn_start_again">Start Again</string>
 
 </resources>
