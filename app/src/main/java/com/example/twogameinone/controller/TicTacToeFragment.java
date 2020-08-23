@@ -2,6 +2,7 @@ package com.example.twogameinone.controller;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -76,9 +77,12 @@ public class TicTacToeFragment extends Fragment {
                 mCharsSituation[i][j] = ' ';
             }
         }
-        mUserGirl = new User("girl", '*', mCharsSituation, mRow, mColumn, "TicTacToe");
-        mUserBoy = new User("boy", 'o', mCharsSituation, mRow, mColumn, "TicTocToe");
+        mUserGirl = new User("Girl", '*', mCharsSituation, mRow, mColumn, "TicTacToe");
+        mUserBoy = new User("Boy", 'o', mCharsSituation, mRow, mColumn, "TicTocToe");
         if (savedInstanceState != null) {
+            mRow = savedInstanceState.getInt(SAVE_ROW);
+            mColumn = savedInstanceState.getInt(SAVE_COLUMN);
+            mCharsSituation = new char[mRow][mColumn];
             mUserGirl = (User) savedInstanceState.getSerializable(SAVE_USER_GIRL);
             mUserBoy = (User) savedInstanceState.getSerializable(SAVE_USER_BOY);
             scoreGirl = savedInstanceState.getInt(SAVE_SCORE_GIRL);
@@ -86,9 +90,6 @@ public class TicTacToeFragment extends Fragment {
             mUserGirl.setScore(scoreGirl);
             mUserBoy.setScore(scoreBoy);
             mCharsSituation = mUserGirl.getSituation();
-            mRow = savedInstanceState.getInt(SAVE_ROW);
-            mColumn = savedInstanceState.getInt(SAVE_COLUMN);
-            mCharsSituation = new char[mRow][mColumn];
             mCheckSettingTicTocToe = savedInstanceState.getBoolean(CHECK_SETTING_TIC_TAC_TOE);
             if (mCheckSettingTicTocToe) {
                 mSettingTicTocTOe = (Setting) savedInstanceState.getSerializable(SAVE_SETTING_TIC_TOC_TOE);
@@ -107,19 +108,15 @@ public class TicTacToeFragment extends Fragment {
                 view.findViewById(R.id.btn_2_2), view.findViewById(R.id.btn_2_3)},
                 {view.findViewById(R.id.btn_3_1), view.findViewById(R.id.btn_3_2),
                         view.findViewById(R.id.btn_3_3)}};
-
+        if (savedInstanceState != null) {
+            changeBackgroundButton();
+        }
         if (mCheckSettingTicTocToe) {
             changeColorBackground();
             changeSituationFirstPlayer();
         }
 
-        if (savedInstanceState != null) {
-            changeBackgroundButton();
-            if (mCheckSettingTicTocToe) {
-                changeColorBackground();
-                changeSituationFirstPlayer();
-            }
-        }
+
         setListener(view);
         return view;
     }
@@ -128,13 +125,21 @@ public class TicTacToeFragment extends Fragment {
         for (int i = 0; i < mRow; i++) {
             for (int j = 0; j < mColumn; j++) {
                 if (mCharsSituation[i][j] == '*') {
+                    mButtons[i][j].setPadding(90, 10, 0, 0);
                     Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_close);
                     mButtons[i][j].setCompoundDrawablesWithIntrinsicBounds(icon,
                             null, null, null);
                 } else if (mCharsSituation[i][j] == 'o') {
+                    mButtons[i][j].setPadding(90, 10, 0, 0);
                     Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_circle);
                     mButtons[i][j].setCompoundDrawablesWithIntrinsicBounds(icon,
                             null, null, null);
+                } else if (mCharsSituation[i][j]==' '){
+                    mButtons[i][j].setPadding(90, 10, 0, 0);
+                    Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_accent);
+                    mButtons[i][j].setCompoundDrawablesWithIntrinsicBounds(icon,
+                            null, null, null);
+
                 }
             }
         }
@@ -236,11 +241,11 @@ public class TicTacToeFragment extends Fragment {
                     toast.setGravity(Gravity.BOTTOM, 0, 0);
                     toast.show();
                 } else if (scoreBoy > scoreGirl) {
-                    Toast toast = Toast.makeText(getContext(), "Girl is winner", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getContext(), "Boy is winner", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM, 0, 0);
                     toast.show();
                 } else {
-                    Toast toast = Toast.makeText(getContext(), "Girl is winner", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getContext(), "Boy and Girl are Equal", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM, 0, 0);
                     toast.show();
                 }
@@ -267,12 +272,12 @@ public class TicTacToeFragment extends Fragment {
                 for (int i = 0; i < mRow; i++) {
                     for (int j = 0; j < mColumn; j++) {
                         mCharsSituation[i][j] = ' ';
+                        mButtons[i][j].setEnabled(true);
                     }
                 }
                 mUserGirl.setSituation(mCharsSituation);
                 mUserBoy.setSituation(mCharsSituation);
                 changeBackgroundButton();
-                ;
             }
         });
 

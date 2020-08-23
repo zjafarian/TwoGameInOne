@@ -92,7 +92,7 @@ public class User implements Serializable {
                 return true;
             else if (checkDiagonalTwo(symbolUser))
                 return true;
-        } else if (gameName.equals(FourInARowFragment.sGameNameFourInRow)) {
+        } /*else if (gameName.equals(FourInARowFragment.sGameNameFourInRow)) {
             if (checkRowFour(symbolUser))
                 return true;
             else if (checkColumnFour(symbolUser))
@@ -101,7 +101,7 @@ public class User implements Serializable {
                 return true;
             else if (checkDiagonalTwoFour(symbolUser))
                 return true;
-        }
+        }*/
 
         return false;
     }
@@ -123,7 +123,7 @@ public class User implements Serializable {
         return check;
     }
 
-    private boolean checkRowFour(char symbolUser) {
+   /* private boolean checkRowFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int j = 0;
@@ -144,7 +144,7 @@ public class User implements Serializable {
         }
         return check;
     }
-
+*/
     private boolean checkColumn(char symbolUser) {
         boolean check = false;
         int counter = 0;
@@ -162,7 +162,7 @@ public class User implements Serializable {
         return check;
     }
 
-    private boolean checkColumnFour(char symbolUser) {
+   /* private boolean checkColumnFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int j = mIntRow - 1;
@@ -181,13 +181,13 @@ public class User implements Serializable {
             }
         }
         return check;
-    }
+    }*/
 
     private boolean checkDiagonalOne(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int i = 0;
-        while (i < mIntRow - 1) {
+        while (i < mIntRow) {
             if (mSituation[i][i] == symbolUser) {
                 counter++;
             }
@@ -198,7 +198,7 @@ public class User implements Serializable {
         return check;
     }
 
-    private boolean checkDiagonalOneFour(char symbolUser) {
+   /* private boolean checkDiagonalOneFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int index = 1;
@@ -227,14 +227,14 @@ public class User implements Serializable {
             j = mIntColumn - index;
         }
         return check;
-    }
+    }*/
 
     private boolean checkDiagonalTwo(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int j = mIntColumn - 1;
         int i = 0;
-        while (i < mIntRow - 1) {
+        while (i < mIntRow && j>=0) {
             if (mSituation[i][j] == symbolUser)
                 counter++;
             i++;
@@ -246,7 +246,7 @@ public class User implements Serializable {
         return check;
     }
 
-    private boolean checkDiagonalTwoFour(char symbolUser) {
+   /* private boolean checkDiagonalTwoFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int index = 1;
@@ -276,7 +276,7 @@ public class User implements Serializable {
         }
 
         return check;
-    }
+    }*/
 
 
 }

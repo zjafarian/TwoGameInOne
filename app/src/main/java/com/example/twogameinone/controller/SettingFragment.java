@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -41,8 +42,8 @@ public class SettingFragment extends Fragment {
     private RadioButton[] mRadioButtonsColors;
     private RadioButton[] mRadioButtonsRows;
     private RadioButton[] mRadioButtonsColumns;
-    private Setting mSetting = new Setting(sGameNameTicTacToe);
-    private Setting defaultSetting = new Setting(sGameNameTicTacToe);
+    private Setting mSetting = new Setting("");
+    private Setting defaultSetting = new Setting("");
     private Button mButtonSave;
     private Button mButtonDiscard;
     private int[] arrayColorId = {R.id.btn_color_red, R.id.btn_color_blue, R.id.btn_color_green,
@@ -154,13 +155,13 @@ public class SettingFragment extends Fragment {
             }
         }
 
-        if (mRadioButtonGirl.isChecked()){
+        if (mRadioButtonGirl.isChecked()) {
             mSetting.setSexUser("girl");
         } else if (mRadioButtonBoy.isChecked())
             mSetting.setSexUser("boy");
 
-        for (int i = 0; i <mRadioButtonsColors.length ; i++) {
-            switch (arrayColorId[i]){
+        for (int i = 0; i < mRadioButtonsColors.length; i++) {
+            switch (arrayColorId[i]) {
                 case R.id.btn_color_red:
                     mSetting.setColorBackground(Red);
                     break;
@@ -269,13 +270,14 @@ public class SettingFragment extends Fragment {
             }
             mRadioGroupRow.setEnabled(false);
             mRadioGroupColumn.setEnabled(false);
-        } else {
+        } else if (mSetting.getGameName().equals(FourInARowFragment.sGameNameFourInRow)) {
+
             for (final int id : arrayRowId) {
                 final RadioButton btnRadio = view.findViewById(id);
                 btnRadio.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        for (RadioButton btn : mRadioButtonsColors) {
+                        for (RadioButton btn : mRadioButtonsRows) {
                             switch (id) {
                                 case R.id.btn_radio_5_row:
                                     mSetting.setRow(5);
@@ -300,12 +302,13 @@ public class SettingFragment extends Fragment {
                     }
                 });
             }
+
             for (final int id : arrayColumnId) {
                 final RadioButton btnRadio = view.findViewById(id);
                 btnRadio.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        for (RadioButton btn : mRadioButtonsColors) {
+                        for (RadioButton btn : mRadioButtonsColumns) {
                             switch (id) {
                                 case R.id.btn_radio_5_column:
                                     mSetting.setColumn(5);
@@ -373,7 +376,7 @@ public class SettingFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_GET_SETTING, mSetting);
-                intent.putExtra(EXTRA_IS_SETTING,true);
+                intent.putExtra(EXTRA_IS_SETTING, true);
                 getActivity().setResult(RESULT_OK, intent);
                 getActivity().finish();
             }

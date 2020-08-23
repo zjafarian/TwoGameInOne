@@ -40,8 +40,9 @@ public class FourInARowFragment extends Fragment {
     public static final String SAVE_COLUMN = "save_column";
     public static final String SAVE_SCORE_BOY = "saveScoreBoy";
     public static final String SAVE_SCORE_GIRL = "saveScoreGirl";
-    private int mIntRow=5;
-    private int mIntColumn=5;
+    public static final String SAVE_SETTING_FOUR_IN_ROW = "saveSettingFourInRow";
+    private int mIntRow;
+    private int mIntColumn;
     private User mUserGirl;
     private User mUserBoy;
     public static String sGameNameFourInRow = "FourInRow";
@@ -72,16 +73,6 @@ public class FourInARowFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mIntRow = mSettingFourInRow.getRow();
-        mIntColumn = mSettingFourInRow.getColumn();
-        mCharsSituation = new char[mIntRow][mIntColumn];
-        for (int i = 0; i < mIntRow; i++) {
-            for (int j = 0; j < mIntColumn; j++) {
-                mCharsSituation[i][j] = ' ';
-            }
-        }
-        mUserGirl = new User("girl", 'r', mCharsSituation, mIntRow, mIntColumn, "TicTacToe");
-        mUserBoy = new User("boy", 'b', mCharsSituation, mIntRow, mIntColumn, "TicTocToe");
         if (savedInstanceState != null) {
             mUserGirl = (User) savedInstanceState.getSerializable(SAVE_USER_GIRL);
             mUserBoy = (User) savedInstanceState.getSerializable(SAVE_USER_BOY);
@@ -93,11 +84,20 @@ public class FourInARowFragment extends Fragment {
             mUserBoy.setScore(scoreBoy);
             mUserGirl.setScore(scoreGirl);
             mCharsSituation = mUserGirl.getSituation();
-            if (mCheckSettingFourInRow) {
-                mCheckSettingFourInRow = savedInstanceState.getBoolean(SAVE_CHECK_SETTING_FOUR_IN_ROW);
-                setRowAndColumn();
+        }
+        if (mCheckSettingFourInRow) {
+            mSettingFourInRow = (Setting) savedInstanceState.getSerializable(SAVE_SETTING_FOUR_IN_ROW);
+        }
+        mIntRow = mSettingFourInRow.getRow();
+        mIntColumn = mSettingFourInRow.getColumn();
+        mCharsSituation = new char[mIntRow][mIntColumn];
+        for (int i = 0; i < mIntRow; i++) {
+            for (int j = 0; j < mIntColumn; j++) {
+                mCharsSituation[i][j] = ' ';
             }
         }
+        mUserGirl = new User("girl", 'r', mCharsSituation, mIntRow, mIntColumn, "TicTacToe");
+        mUserBoy = new User("boy", 'b', mCharsSituation, mIntRow, mIntColumn, "TicTocToe");
 
     }
 
@@ -107,10 +107,6 @@ public class FourInARowFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_four_in_a_row, container, false);
-        mButtons = new Button[mIntRow][mIntColumn];
-        mIdButtons = new int[mIntRow][mIntColumn];
-        setViewId(view);
-        createButtons(view, mIntRow, mIntColumn);
         if (savedInstanceState != null) {
             changeBackgroundButton();
         }
@@ -118,6 +114,10 @@ public class FourInARowFragment extends Fragment {
             changeColorBackground();
             changeSituationFirstPlayer();
         }
+        mButtons = new Button[mIntRow][mIntColumn];
+        mIdButtons = new int[mIntRow][mIntColumn];
+        setViewId(view);
+        createButtons(view, mIntRow, mIntColumn);
         setListener();
         return view;
     }
@@ -164,11 +164,10 @@ public class FourInARowFragment extends Fragment {
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
         if (requestCode == EXTRA_FOUR_IN_ROW_REQUEST_CODE) {
-            mCheckSettingFourInRow = data.getBooleanExtra(SettingFragment.EXTRA_IS_SETTING,false);
+            mCheckSettingFourInRow = data.getBooleanExtra(SettingFragment.EXTRA_IS_SETTING, false);
             mSettingFourInRow = (Setting) data.getSerializableExtra(SettingFragment.EXTRA_GET_SETTING);
             changeColorBackground();
             changeSituationFirstPlayer();
-            setRowAndColumn();
         }
     }
 
@@ -182,6 +181,7 @@ public class FourInARowFragment extends Fragment {
         outState.putInt(SAVE_SCORE_GIRL, scoreGirl);
         outState.putInt(SAVE_ROW, mIntRow);
         outState.putInt(SAVE_COLUMN, mIntColumn);
+        outState.putSerializable(SAVE_SETTING_FOUR_IN_ROW, mSettingFourInRow);
     }
 
     private void changeBackgroundButton() {
@@ -198,11 +198,6 @@ public class FourInARowFragment extends Fragment {
                 }
             }
         }
-    }
-
-    private void setRowAndColumn() {
-        mIntRow = mSettingFourInRow.getRow();
-        mIntColumn = mSettingFourInRow.getColumn();
     }
 
     private void changeSituationFirstPlayer() {
