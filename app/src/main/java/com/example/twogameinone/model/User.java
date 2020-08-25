@@ -92,7 +92,7 @@ public class User implements Serializable {
                 return true;
             else if (checkDiagonalTwo(symbolUser))
                 return true;
-        } /*else if (gameName.equals(FourInARowFragment.sGameNameFourInRow)) {
+        } else if (gameName.equals(FourInARowFragment.sGameNameFourInRow)) {
             if (checkRowFour(symbolUser))
                 return true;
             else if (checkColumnFour(symbolUser))
@@ -101,7 +101,7 @@ public class User implements Serializable {
                 return true;
             else if (checkDiagonalTwoFour(symbolUser))
                 return true;
-        }*/
+        }
 
         return false;
     }
@@ -123,16 +123,16 @@ public class User implements Serializable {
         return check;
     }
 
-   /* private boolean checkRowFour(char symbolUser) {
+    private boolean checkRowFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int j = 0;
-        int count = 0;
         for (int i = mIntRow - 1; i >= 0; i--) {
             while (j < mIntColumn - 1) {
-                for (int k = j; k < j + 4; k++) {
-                    if (mSituation[i][k] == symbolUser) {
-                        counter++;
+                if (mIntColumn - j >= 4) {
+                    for (int k = j; k < j + 4; k++) {
+                        if (mSituation[i][k]==symbolUser)
+                            counter++;
                     }
                 }
                 if (counter == 4) {
@@ -144,7 +144,8 @@ public class User implements Serializable {
         }
         return check;
     }
-*/
+
+
     private boolean checkColumn(char symbolUser) {
         boolean check = false;
         int counter = 0;
@@ -162,15 +163,18 @@ public class User implements Serializable {
         return check;
     }
 
-   /* private boolean checkColumnFour(char symbolUser) {
+    private boolean checkColumnFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
+        int index=0;
         int j = mIntRow - 1;
-        for (int i = 0; i < mIntColumn; i++) {
+        for (int i = 0 ; i < mIntColumn ; i++) {
             while (j >= 0) {
-                for (int k = j; k > j - 4; k--) {
-                    if (mSituation[k][i] == symbolUser) {
-                        counter++;
+                if (mIntRow-index>=4){
+                    for (int k = j; k > j - 4; k--) {
+                        if (mSituation[k][i] == symbolUser) {
+                            counter++;
+                        }
                     }
                 }
                 if (counter == 4) {
@@ -178,10 +182,11 @@ public class User implements Serializable {
                     return check;
                 } else counter = 0;
                 j--;
+                index++;
             }
         }
         return check;
-    }*/
+    }
 
     private boolean checkDiagonalOne(char symbolUser) {
         boolean check = false;
@@ -198,7 +203,7 @@ public class User implements Serializable {
         return check;
     }
 
-   /* private boolean checkDiagonalOneFour(char symbolUser) {
+    private boolean checkDiagonalOneFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int index = 1;
@@ -227,14 +232,14 @@ public class User implements Serializable {
             j = mIntColumn - index;
         }
         return check;
-    }*/
+    }
 
     private boolean checkDiagonalTwo(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int j = mIntColumn - 1;
         int i = 0;
-        while (i < mIntRow && j>=0) {
+        while (i < mIntRow && j >= 0) {
             if (mSituation[i][j] == symbolUser)
                 counter++;
             i++;
@@ -246,7 +251,7 @@ public class User implements Serializable {
         return check;
     }
 
-   /* private boolean checkDiagonalTwoFour(char symbolUser) {
+    private boolean checkDiagonalTwoFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
         int index = 1;
@@ -276,7 +281,7 @@ public class User implements Serializable {
         }
 
         return check;
-    }*/
+    }
 
 
 }

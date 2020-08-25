@@ -2,6 +2,7 @@ package com.example.twogameinone.controller;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -41,6 +42,7 @@ public class FourInARowFragment extends Fragment {
     public static final String SAVE_SCORE_BOY = "saveScoreBoy";
     public static final String SAVE_SCORE_GIRL = "saveScoreGirl";
     public static final String SAVE_SETTING_FOUR_IN_ROW = "saveSettingFourInRow";
+    public static final String TAG = "FourInROW";
     private int mIntRow;
     private int mIntColumn;
     private User mUserGirl;
@@ -70,23 +72,19 @@ public class FourInARowFragment extends Fragment {
         // Required empty public constructor
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mUserGirl = (User) savedInstanceState.getSerializable(SAVE_USER_GIRL);
-            mUserBoy = (User) savedInstanceState.getSerializable(SAVE_USER_BOY);
-            mIntRow = savedInstanceState.getInt(SAVE_ROW);
-            mIntColumn = savedInstanceState.getInt(SAVE_COLUMN);
-            scoreGirl = savedInstanceState.getInt(SAVE_SCORE_GIRL);
-            scoreBoy = savedInstanceState.getInt(SAVE_SCORE_BOY);
-            mCheckSettingFourInRow = savedInstanceState.getBoolean(SAVE_CHECK_SETTING_FOUR_IN_ROW);
-            mUserBoy.setScore(scoreBoy);
-            mUserGirl.setScore(scoreGirl);
-            mCharsSituation = mUserGirl.getSituation();
-        }
         if (mCheckSettingFourInRow) {
-            mSettingFourInRow = (Setting) savedInstanceState.getSerializable(SAVE_SETTING_FOUR_IN_ROW);
+            mSettingFourInRow = (Setting) getActivity().getIntent().getSerializableExtra(SettingFragment.EXTRA_GET_SETTING);
+            mIntRow = mSettingFourInRow.getRow();
+            mIntColumn = mSettingFourInRow.getColumn();
+            for (int i = 0; i < mIntRow; i++) {
+                for (int j = 0; j < mIntColumn; j++) {
+                    mCharsSituation[i][j] = ' ';
+                }
+            }
         }
         mIntRow = mSettingFourInRow.getRow();
         mIntColumn = mSettingFourInRow.getColumn();
@@ -96,8 +94,22 @@ public class FourInARowFragment extends Fragment {
                 mCharsSituation[i][j] = ' ';
             }
         }
-        mUserGirl = new User("girl", 'r', mCharsSituation, mIntRow, mIntColumn, "TicTacToe");
-        mUserBoy = new User("boy", 'b', mCharsSituation, mIntRow, mIntColumn, "TicTocToe");
+        mUserGirl = new User("girl", 'r', mCharsSituation, mIntRow, mIntColumn, sGameNameFourInRow);
+        mUserBoy = new User("boy", 'b', mCharsSituation, mIntRow, mIntColumn, sGameNameFourInRow);
+        if (savedInstanceState != null) {
+            mIntRow = savedInstanceState.getInt(SAVE_ROW);
+            mIntColumn = savedInstanceState.getInt(SAVE_COLUMN);
+            mCharsSituation = new char[mIntRow][mIntColumn];
+            mUserGirl = (User) savedInstanceState.getSerializable(SAVE_USER_GIRL);
+            mUserBoy = (User) savedInstanceState.getSerializable(SAVE_USER_BOY);
+            scoreGirl = savedInstanceState.getInt(SAVE_SCORE_GIRL);
+            scoreBoy = savedInstanceState.getInt(SAVE_SCORE_BOY);
+            mCharsSituation = mUserGirl.getSituation();
+            mCheckSettingFourInRow = savedInstanceState.getBoolean(SAVE_CHECK_SETTING_FOUR_IN_ROW);
+            if (mCheckSettingFourInRow) {
+                mSettingFourInRow = (Setting) savedInstanceState.getSerializable(SAVE_SETTING_FOUR_IN_ROW);
+            }
+        }
 
     }
 
@@ -108,6 +120,8 @@ public class FourInARowFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_four_in_a_row, container, false);
         if (savedInstanceState != null) {
+            changeColorBackground();
+            changeSituationFirstPlayer();
             changeBackgroundButton();
         }
         if (mCheckSettingFourInRow) {
@@ -166,8 +180,8 @@ public class FourInARowFragment extends Fragment {
         if (requestCode == EXTRA_FOUR_IN_ROW_REQUEST_CODE) {
             mCheckSettingFourInRow = data.getBooleanExtra(SettingFragment.EXTRA_IS_SETTING, false);
             mSettingFourInRow = (Setting) data.getSerializableExtra(SettingFragment.EXTRA_GET_SETTING);
-            changeColorBackground();
             changeSituationFirstPlayer();
+            changeColorBackground();
         }
     }
 
@@ -184,15 +198,23 @@ public class FourInARowFragment extends Fragment {
         outState.putSerializable(SAVE_SETTING_FOUR_IN_ROW, mSettingFourInRow);
     }
 
+
     private void changeBackgroundButton() {
         for (int i = 0; i < mIntRow; i++) {
             for (int j = 0; j < mIntColumn; j++) {
                 if (mCharsSituation[i][j] == 'r') {
+                    mButtons[i][j].setPadding(40, 6, 0, 0);
                     Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_red);
                     mButtons[i][j].setCompoundDrawablesWithIntrinsicBounds(icon,
                             null, null, null);
                 } else if (mCharsSituation[i][j] == 'b') {
+                    mButtons[i][j].setPadding(40, 6, 0, 0);
                     Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_blue);
+                    mButtons[i][j].setCompoundDrawablesWithIntrinsicBounds(icon,
+                            null, null, null);
+                } else if (mCharsSituation[i][j] == ' ') {
+                    mButtons[i][j].setPadding(40, 6, 0, 0);
+                    Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_accent);
                     mButtons[i][j].setCompoundDrawablesWithIntrinsicBounds(icon,
                             null, null, null);
                 }
@@ -260,7 +282,7 @@ public class FourInARowFragment extends Fragment {
                     public void onClick(View view) {
                         if (mImageButtonActiveUserGirl.getVisibility() == View.VISIBLE) {
                             onTogglePlayer(true, finalI, finalJ);
-                            mButtons[finalI][finalJ].setPadding(20, 8, 0, 0);
+                            mButtons[finalI][finalJ].setPadding(40, 6, 0, 0);
                             Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_red);
                             mButtons[finalI][finalJ].setCompoundDrawablesWithIntrinsicBounds(icon,
                                     null, null, null);
@@ -268,7 +290,7 @@ public class FourInARowFragment extends Fragment {
                             findWinner(finalI, finalJ, true);
                         } else if (mImageButtonActiveUserBoy.getVisibility() == View.VISIBLE) {
                             onTogglePlayer(false, finalI, finalJ);
-                            mButtons[finalI][finalJ].setPadding(20, 8, 0, 0);
+                            mButtons[finalI][finalJ].setPadding(40, 6, 0, 0);
                             Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_blue);
                             mButtons[finalI][finalJ].setCompoundDrawablesWithIntrinsicBounds(icon,
                                     null, null, null);
@@ -291,6 +313,7 @@ public class FourInARowFragment extends Fragment {
                 }
                 mUserGirl.setSituation(mCharsSituation);
                 mUserBoy.setSituation(mCharsSituation);
+                changeBackgroundButton();
                 setButtonForStart();
 
 
@@ -327,6 +350,7 @@ public class FourInARowFragment extends Fragment {
                 mUserGirl.setScore(scoreGirl);
                 widthAndHeight = 800;
                 setButtonForStart();
+                changeBackgroundButton();
             }
 
         });
@@ -350,12 +374,18 @@ public class FourInARowFragment extends Fragment {
                 mButtons[i][j].setGravity(Gravity.CENTER);
                 if (i < mIntRow - 1)
                     mButtons[i][j].setEnabled(false);
+                else if (i==mIntRow-1)
+                    mButtons[i][j].setEnabled(true);
             }
         }
+
     }
 
     private void findWinner(int indexI, int indexJ, boolean isGirl) {
-        mButtons[indexI - 1][indexJ].setEnabled(true);
+        if (indexI > 0) {
+            mButtons[indexI - 1][indexJ].setEnabled(true);
+        }
+
         if (isGirl) {
             if (mUserGirl.reviewWinner(sGameNameFourInRow, mCharsSituation, mUserGirl.getSymbolUser())) {
                 outWinner("Girl");
@@ -379,7 +409,6 @@ public class FourInARowFragment extends Fragment {
                 mUserGirl.setSituation(mCharsSituation);
                 mUserBoy.setSituation(mCharsSituation);
             }
-            setButtonForStart();
         }
     }
 
