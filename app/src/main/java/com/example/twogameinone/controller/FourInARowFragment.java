@@ -1,18 +1,10 @@
 package com.example.twogameinone.controller;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +14,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.twogameinone.R;
 import com.example.twogameinone.model.Setting;
 import com.example.twogameinone.model.User;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
 
 
 public class FourInARowFragment extends Fragment {
@@ -76,18 +70,15 @@ public class FourInARowFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mCheckSettingFourInRow) {
-            mSettingFourInRow = (Setting) getActivity().getIntent().getSerializableExtra(SettingFragment.EXTRA_GET_SETTING);
+        mSettingFourInRow = (Setting) getActivity().getIntent().getSerializableExtra(SettingFragment.EXTRA_GET_SETTING);
+        if (mSettingFourInRow != null) {
             mIntRow = mSettingFourInRow.getRow();
             mIntColumn = mSettingFourInRow.getColumn();
-            for (int i = 0; i < mIntRow; i++) {
-                for (int j = 0; j < mIntColumn; j++) {
-                    mCharsSituation[i][j] = ' ';
-                }
-            }
+        } else {
+            mSettingFourInRow = new Setting(sGameNameFourInRow);
+            mIntRow = mSettingFourInRow.getRow();
+            mIntColumn = mSettingFourInRow.getColumn();
         }
-        mIntRow = mSettingFourInRow.getRow();
-        mIntColumn = mSettingFourInRow.getColumn();
         mCharsSituation = new char[mIntRow][mIntColumn];
         for (int i = 0; i < mIntRow; i++) {
             for (int j = 0; j < mIntColumn; j++) {
@@ -374,7 +365,7 @@ public class FourInARowFragment extends Fragment {
                 mButtons[i][j].setGravity(Gravity.CENTER);
                 if (i < mIntRow - 1)
                     mButtons[i][j].setEnabled(false);
-                else if (i==mIntRow-1)
+                else if (i == mIntRow - 1)
                     mButtons[i][j].setEnabled(true);
             }
         }

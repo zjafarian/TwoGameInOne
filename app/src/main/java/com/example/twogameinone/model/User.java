@@ -4,9 +4,9 @@ import com.example.twogameinone.controller.FourInARowFragment;
 import com.example.twogameinone.controller.TicTacToeFragment;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 public class User implements Serializable {
+    public static final String TAG = "user";
     private String mSexUser;
     private char mSymbolUser;
     private char[][] mSituation;
@@ -131,7 +131,7 @@ public class User implements Serializable {
             while (j < mIntColumn - 1) {
                 if (mIntColumn - j >= 4) {
                     for (int k = j; k < j + 4; k++) {
-                        if (mSituation[i][k]==symbolUser)
+                        if (mSituation[i][k] == symbolUser)
                             counter++;
                     }
                 }
@@ -144,7 +144,6 @@ public class User implements Serializable {
         }
         return check;
     }
-
 
     private boolean checkColumn(char symbolUser) {
         boolean check = false;
@@ -166,11 +165,11 @@ public class User implements Serializable {
     private boolean checkColumnFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
-        int index=0;
+        int index = 0;
         int j = mIntRow - 1;
-        for (int i = 0 ; i < mIntColumn ; i++) {
+        for (int i = 0; i < mIntColumn; i++) {
             while (j >= 0) {
-                if (mIntRow-index>=4){
+                if (mIntRow - index >= 4) {
                     for (int k = j; k > j - 4; k--) {
                         if (mSituation[k][i] == symbolUser) {
                             counter++;
@@ -206,30 +205,28 @@ public class User implements Serializable {
     private boolean checkDiagonalOneFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
-        int index = 1;
-        int range = 0;
-        int i = mIntRow - 1;
-        int j = mIntColumn - 1;
-        int lengthRow = i - 4;
-        int lengthColumn = j - 4;
-        while (i >= lengthRow && j >= lengthColumn) {
-            if (range < 4) {
-                if (mSituation[i][j] == symbolUser) {
-                    counter++;
+        int length = mIntColumn - 4;
+        for (int i = mIntRow - 1; i >= 3; i--) {
+            int row = i;
+            if (length < mIntColumn) {
+                for (int j = length; j >= 0; j--) {
+                    int lengthCol = j + 4;
+                    if (lengthCol <= mIntColumn) {
+                        for (int k = j; k < lengthCol; k++) {
+                            if (mSituation[row][k] == symbolUser)
+                                counter++;
+                            row--;
+                        }
+                        if (counter == 4) {
+                            check = true;
+                            return check;
+                        } else counter = 0;
+                    }
+                    row=i;
                 }
-                i -= 1;
-                j -= 1;
-                range++;
             }
-            if (counter == 4) {
-                check = true;
-                return check;
-            }
-            counter = 0;
-            range = 0;
-            index++;
-            i = mIntRow - index;
-            j = mIntColumn - index;
+
+            length++;
         }
         return check;
     }
@@ -254,31 +251,29 @@ public class User implements Serializable {
     private boolean checkDiagonalTwoFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
-        int index = 1;
-        int range = 0;
-        int i = mIntRow - 1;
-        int j = 0;
-        int lengthRow = i - 4;
-        int lengthColumn = j + 4;
-        while (i >= lengthRow && j <= lengthColumn) {
-            if (range < 4) {
-                if (mSituation[i][j] == symbolUser) {
-                    counter++;
+        int length = (mIntColumn - 4) + 1;
+        for (int i = mIntRow - 1; i >= 3; i--) {
+            int row = i;
+            if (length>=0){
+                for (int j = mIntColumn - 1; j >= length; j--) {
+                    int lengthCol = (j - 4) + 1;
+                    if (lengthCol >= 0) {
+                        for (int k = j; k >= lengthCol; k--) {
+                            if (mSituation[row][k] == symbolUser)
+                                counter++;
+                            row--;
+                        }
+                        if (counter == 4) {
+                            check = true;
+                            return check;
+                        } else counter = 0;
+                    }
+                    row =i;
                 }
-                i -= 1;
-                j -= 1;
-                range++;
             }
-            if (counter == 4) {
-                check = true;
-                return check;
-            }
-            counter = 0;
-            range = 0;
-            index++;
-            i = mIntRow - index;
-            j = mIntColumn + index;
+            length--;
         }
+
 
         return check;
     }

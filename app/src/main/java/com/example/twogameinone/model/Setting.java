@@ -16,9 +16,6 @@ public class Setting implements Serializable {
         if (this.mGameName.equals(sStringNameGameTicTacToe)){
             mRow =3;
             mColumn=3;
-        } else if (this.mGameName.equals(sStringNameGameFourInRow)){
-            mRow =5;
-            mColumn=5;
         }
     }
 
