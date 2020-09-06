@@ -306,6 +306,7 @@ public class FourInARowFragment extends Fragment {
                 mUserBoy.setSituation(mCharsSituation);
                 changeBackgroundButton();
                 setButtonForStart();
+                changeSituationFirstPlayer();
 
 
             }

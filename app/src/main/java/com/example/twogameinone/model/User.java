@@ -165,24 +165,19 @@ public class User implements Serializable {
     private boolean checkColumnFour(char symbolUser) {
         boolean check = false;
         int counter = 0;
-        int index = 0;
-        int j = mIntRow - 1;
-        for (int i = 0; i < mIntColumn; i++) {
-            while (j >= 0) {
-                if (mIntRow - index >= 4) {
-                    for (int k = j; k > j - 4; k--) {
-                        if (mSituation[k][i] == symbolUser) {
-                            counter++;
-                        }
-                    }
+        for (int i = mIntRow-1; i >2 ; i--) {
+            for (int j = 0; j <mIntColumn ; j++) {
+                for (int k = i; k >=i-3 ; k--) {
+                    if (mSituation[k][j]==symbolUser)
+                        counter++;
                 }
-                if (counter == 4) {
-                    check = true;
+                if (counter==4){
+                    check=true;
                     return check;
-                } else counter = 0;
-                j--;
-                index++;
+                } else counter=0;
+
             }
+
         }
         return check;
     }
@@ -222,7 +217,7 @@ public class User implements Serializable {
                             return check;
                         } else counter = 0;
                     }
-                    row=i;
+                    row = i;
                 }
             }
 
@@ -254,7 +249,7 @@ public class User implements Serializable {
         int length = (mIntColumn - 4) + 1;
         for (int i = mIntRow - 1; i >= 3; i--) {
             int row = i;
-            if (length>=0){
+            if (length >= 0) {
                 for (int j = mIntColumn - 1; j >= length; j--) {
                     int lengthCol = (j - 4) + 1;
                     if (lengthCol >= 0) {
@@ -268,7 +263,7 @@ public class User implements Serializable {
                             return check;
                         } else counter = 0;
                     }
-                    row =i;
+                    row = i;
                 }
             }
             length--;
